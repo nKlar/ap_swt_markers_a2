@@ -1,4 +1,4 @@
-diag_log "SWT MARKERS SERVER VERSION 2 ARMA 2";
+diag_log "AP SWT MARKERS SERVER VERSION";
 swt_markers_count = 0;
 swt_markers_isPlayer_bug = [];
 {
@@ -43,6 +43,7 @@ swt_markers_logicServer_regMark = {
 	_mark = _this select 1;
 	_channel = _mark select 1;
 	_mark set [count _mark, time];
+	_mark set [count _mark, _player];
 	swt_markers_count = swt_markers_count + 1;
 	_mark set [0, "SWT_M#"+ str swt_markers_count]; // BAD
 	swt_markers_send_mark = _mark;
@@ -150,13 +151,16 @@ swt_markers_logicServer_change_mark = {
 		_markParams = _this select 1;
 		_arr = _this select 2;
 		_index = _this select 3;
+		_arrIndex = _this select 4;
 		switch (toUpper _action) do {
 		    case "DIR": {
 		    	_markParams set [6,_dir];
 		    };
 
 		    case "DEL": {
-		    	_arr = _arr - [_arr select _index];
+		    	_arr set [_index, "_DELETE_"];
+		    	_arr = _arr - ["_DELETE_"];
+		    	_channelData set [_arrIndex, _arr];
 		    };
 
 			case "POS": {
@@ -165,15 +169,17 @@ swt_markers_logicServer_change_mark = {
 		};
 	};
 
+
 	_find_changeMarkers = {
 		private ['_find'];
 		_channelUnit = _this;
 		_find = false;
 		_num = _channelData find _channelUnit;
+
     	if (_num != -1) then {
     		{
     			if (_x select 0 == _mark_id) exitWith {
-					[_action, _x, _channelData select (_num + 1), _forEachIndex] call _processMarker;
+					[_action, _x, _channelData select (_num + 1), _forEachIndex, (_num + 1)] call _processMarker;
 					_find = true;
 				};
     		} forEach (_channelData select (_num + 1));
@@ -183,13 +189,13 @@ swt_markers_logicServer_change_mark = {
     		for [{_i=1}, {_i<(count _channelData)&&!_find},{_i=_i+2}] do {
     			{
     				if (_x select 0 == _mark_id) exitWith {
-						[_action, _x, (_channelData select _i), _forEachIndex] call _processMarker;
+						[_action, _x, (_channelData select _i), _forEachIndex, _i] call _processMarker;
 						_find = true;
 					};
     			} forEach (_channelData select _i);
     		};
     	};
-    	if (!_find) then {diag_log "CHANGE MARKER FAIL: CAN'T FIND DATA";};
+    	if (!_find) then {diag_log "SWT MARKERS: CHANGE MARKER FAIL, CAN'T FIND DATA";};
 	};
 
 	_action = _this select 0;
@@ -261,6 +267,7 @@ swt_markers_logicServer_load = {
 		_x set [1, "S"];
 		_x set [count _x, (name _player)];
 		_x set [count _x, time];
+		_x set [count _x, _player];
 		_x set [count _x, true]; //means loaded
 	} forEach _data;
 
@@ -288,14 +295,20 @@ swt_markers_logicServer_load = {
 
 	swt_cfgMarkerColors = [];
 	_cfg = (configfile >> "CfgMarkerColors");
-	for "_i" from 0 to (count _cfg) - 1 do {
-		swt_cfgMarkerColors set [count swt_cfgMarkerColors, _cfg select _i];
+	for "_i" from 0 to (count _cfg) - 1 do
+	{
+		if (getNumber (_cfg select _i >> 'scope') > 1) then
+		{
+			swt_cfgMarkerColors set [count swt_cfgMarkerColors, _cfg select _i];
+		};
 	};
 
 	swt_cfgMarkers = [];
 	_cfg = (configfile >> "CfgMarkers");
-	for "_i" from 0 to (count _cfg) - 1 do {
-		if (getNumber (_cfg select _i >> 'scope') > 0 && !(getText (_cfg select _i >> 'markerClass') in ['NATO_Sizes','Locations','Flags'])) then {
+	for "_i" from 0 to (count _cfg) - 1 do
+	{
+		if (getNumber (_cfg select _i >> 'scope') > 1 && !(getText (_cfg select _i >> 'markerClass') in ['NATO_Sizes','Locations','Flags'])) then
+		{
 			swt_cfgMarkers set [count swt_cfgMarkers, _cfg select _i];
 		};
 	};

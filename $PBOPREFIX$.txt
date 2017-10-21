@@ -1,5 +1,5 @@
-///<'swt_markers_a2.pbo' properties via Mikero's dos tools, dll version 6.44>///
-prefix=swt_markers_a2
+///<'ap_markers.pbo' properties via Mikero's dos tools, dll version 6.44>///
+prefix=swt_markers
 //Pbo Type is: Arma Addon
-//Sha: '0CA6DF74F640AFE85560CCEA8DC1E11208143759'
+//Sha: 'CF4BA5874424CEF389FE1E7A6A193B4A559CCE36'
 //////</properties>//////

@@ -8,8 +8,7 @@ swt_markers_mark_dir = 0;
 _displayMark = displayNull;
 _displayMap = ({if !(isNull(findDisplay _x)) exitWith {findDisplay _x}} forEach [37,52,53,12]);
 (_displayMap displayCtrl 228) ctrlShow false;
-_text = "" + (if (swt_markers_fast_text_G) then {((str (group player)) call swt_markers_fnc_Group_str) + " "} else {""}) + (if (swt_markers_fast_text_N) then {name player + " "} else {""}) + (if (swt_markers_fast_text_T) then {swt_markers_fast_text_T_saved + " "} else {""});
-
+_text = " " + (if (swt_markers_fast_text_G) then {((str (group player)) call swt_markers_fnc_Group_str) + " "} else {""}) + (if (swt_markers_fast_text_N) then {name player + " "} else {""}) + (if (swt_markers_fast_text_T) then {swt_markers_fast_text_T_saved + " "} else {""});
 _WorldCoord = [];
 _send = [player];
 _channel = "";
@@ -24,7 +23,7 @@ switch (swt_markers_channel) do {
 		_channel = "C";
 		if !((leader player == player) or (((effectiveCommander (vehicle player)) == player) and (vehicle player != player))) exitWith {
 			_go = false;
-			systemChat "You aren't a team leader";
+			systemChat (localize "STR_SWT_M_NTL");
 		}
 	};
 
@@ -40,7 +39,7 @@ switch (swt_markers_channel) do {
 		_channel = "V";
 		if (vehicle player == player) exitWith {
 			_go = false;
-			systemChat "You aren't in a vehicle";
+			systemChat (localize "STR_SWT_M_VC");
 		};
 	};
 

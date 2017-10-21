@@ -18,6 +18,7 @@ swt_markers_createMarker = {
 	_Dir   = _params select 6;
 	_Scale = _params select 7;
 	_Name  = _params select 8;
+	_Sender = _params select 10;
 
 	swt_markers_allMarkers set [count swt_markers_allMarkers,_mark];
 	swt_markers_allMarkers_params set [count swt_markers_allMarkers_params, _params];
@@ -37,14 +38,35 @@ swt_markers_createMarker = {
 			_mark setMarkerBrushLocal "Solid";
 			_mark setMarkerShapeLocal "ELLIPSE";
 		} else {
-			_mark setMarkerTypeLocal (swt_cfgMarkers_names select _Type);
+			_typeName = swt_cfgMarkers_names select _Type;
+			_mark setMarkerTypeLocal _typeName;
 			_mark setMarkerTextLocal _Text;
 			_mark setMarkerSizeLocal [_Scale,_Scale];
+			switch (_typeName) do
+			{
+				case "nm_dv":
+				{
+					if !(player diarySubjectExists "NK_DV") then
+					{
+						player createDiarySubject ["NK_DV", localize "STR_NK_DV"];
+					};
+					player createDiaryRecord ["NK_DV", [localize "STR_NK_FREQ", ([_Text, 1, 25, _Sender] call nk_swt_markers_parse_frequency)]];
+				};
+
+				case "nm_kv":
+				{
+					if !(player diarySubjectExists "NK_KV") then
+					{
+						player createDiarySubject ["NK_KV", localize "STR_NK_KV"];
+					};
+					player createDiaryRecord ["NK_KV", [localize "STR_NK_FREQ", ([_Text, 30, 512, _Sender] call nk_swt_markers_parse_frequency)]];
+				};
+			};
 		};
 	};
 };
 
-swt_markers_sys_sendMark = compile preprocessFileLineNumbers '\swt_markers_a2\Logic\sendMark.sqf';
+swt_markers_sys_sendMark = compile preprocessFileLineNumbers '\swt_markers\Logic\sendMark.sqf';
 
 swt_markers_logicClient_create = {
 	if (swt_markers_DisableLoc) exitWith {diag_log "SWT MARKERS: MARKERS DISABLED"};
@@ -62,10 +84,11 @@ swt_markers_logicClient_del = {
 		{
 			if (_x select 0 == _mark) exitWith {
 				_paramsOut = _x;
-				swt_markers_allMarkers_params = swt_markers_allMarkers_params - [_x];
+				swt_markers_allMarkers_params set[_forEachIndex, "_DELETE_"];
+				swt_markers_allMarkers_params = swt_markers_allMarkers_params - ["_DELETE_"];
 			};
 		} forEach swt_markers_allMarkers_params;
-		swt_markers_allMarkers = swt_markers_allMarkers - [swt_markers_allMarkers select (swt_markers_allMarkers find _mark)];
+		swt_markers_allMarkers = swt_markers_allMarkers - [_mark];
 		["DEL", [name _player, _paramsOut]] call swt_markers_log;
 	};
 };
@@ -135,6 +158,127 @@ swt_markers_DisableLoc_fnc = {
 	};
 };
 
+nk_swt_markers_parse_frequency = {
+	private["_text", "_array", "_min", "_max", "_title", "_chastoty", "_sdvigi", "_arrayDouble", "_i", "_titleReady", "_prefix", "_Sender"];
+	_text = _this select 0;
+	_array = toArray _text;
+	_array = _array - [60,62];
+	_min = _this select 1;
+	_max = _this select 2;
+	_Sender = _this select 3;
+
+	_title = [];
+	_chastoty = [];
+	_sdvigi = [];
+	_arrayDouble = [];
+	_i = 0;
+	_titleReady = false;
+	_prefix = -1;
+
+	while{(_i < (count _array))} do
+	{
+		_char = (_array select _i);
+		if(_char >= 48 && _char <= 57) then
+		{
+			while {(_char >= 48 && _char <= 57) || (_char in [44,46])} do
+			{
+				if(_char == 44) then {_char = _char + 2;};
+				_arrayDouble set [count _arrayDouble, _char];
+				_i = _i + 1;
+				_char = (_array select _i);
+			};
+			_stringDouble = toString _arrayDouble;
+			_double = parseNumber _stringDouble;
+			if(_prefix != -1) then
+			{
+				_prefix = toString [_prefix];
+				_sdvigi set[count _sdvigi, format["%1%2",_prefix,_double]];
+				_prefix = -1;
+			}
+			else
+			{
+				if(_double >= _min && _double <= _max) then
+				{
+					_chastoty set[count _chastoty, _double];
+					_titleReady = true;
+				};
+			};
+
+			if(!_titleReady) then
+			{
+				_title = _title + _arrayDouble;
+			};
+			_arrayDouble = [];
+		}
+		else
+		{
+			switch (true) do
+			{
+				case (_char in [43,45]):
+				{
+					_prefix = _char;
+				};
+
+				case (_char != 32):
+				{
+					_prefix = -1;
+				};
+			};
+			if(!_titleReady) then
+			{
+				_title set [count _title, _char];
+			};
+			_i = _i + 1;
+		}
+	};
+
+	_parsed = (toString _array);
+	switch (true) do
+	{
+		case ((group _Sender) == (group player)):
+		{
+			_parsed = format[localize "STR_NK_MY_GRP", _parsed];
+		};
+
+		case (([_Sender] call nk_swt_markers_parse_squad) == ([player] call nk_swt_markers_parse_squad)):
+		{
+			_parsed = format[localize "STR_NK_MY_SQD", _parsed];
+		};
+	};
+
+	_parsed = _parsed + '<br/>';
+
+	if((count _chastoty) > 0) then
+	{
+		_parsed = _parsed + format[(localize "STR_NK_FQ_MAIN"), _chastoty select 0] + '<br/>';
+		for [{_i=1},{_i<(count _chastoty)},{_i=_i+1}] do
+		{
+			_parsed = _parsed + format[(localize "STR_NK_FQ_N"), _i, _chastoty select _i] + '<br/>';
+		};
+	};
+	if((count _sdvigi) > 0) then
+	{
+		for [{_i=0},{_i<(count _sdvigi)},{_i=_i+1}] do
+		{
+			_parsed = _parsed + format[(localize "STR_NK_FQ_ST"), _i+1, _sdvigi select _i] + '<br/>';
+		};
+	};
+	_parsed;
+};
+
+nk_swt_markers_parse_squad = {
+	_name = name (_this select 0);
+	_array = toArray(_name);
+	_srch = _array find 93;
+	if(_srch != -1) then
+	{
+		_array resize (_srch);
+		_array = _array - [91];
+	};
+
+	(toString _array);
+};
+
 0 spawn {
 	"swt_markers_send_mark"  addPublicVariableEventHandler {
 		(_this select 1) call swt_markers_logicClient_create;
@@ -162,7 +306,8 @@ swt_markers_DisableLoc_fnc = {
 	waitUntil {!isNull player};
 	swt_markers_sys_req_markers = player;
 	publicVariableServer "swt_markers_sys_req_markers";
-	if (swt_markers_logging) then {
-		player createDiarySubject ["SwtMarkersLog","SWT Markers"];
-	};
+	player createDiarySubject ["SwtMarkersLog", localize "STR_SWT_MARKERS"];
+	player createDiaryRecord ["SwtMarkersLog", [localize "STR_SWT_M_A", localize "STR_SWT_M_ATXT"]];
+	player createDiaryRecord ["SwtMarkersLog", [localize "STR_SWT_M_SET", localize "STR_SWT_M_SETTXT"]];
+	player createDiaryRecord ["SwtMarkersLog", [localize "STR_SWT_M_INFO", localize "STR_SWT_M_INFOTXT"]];
 };

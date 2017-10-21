@@ -7,7 +7,7 @@
 #define	colorPlayerChannel [0.8, 0.7, 1, 1]
 #define GR_W (((safezoneW/safezoneH) min 1.2)/40)
 #define GR_H ((((safezoneW/safezoneH) min 1.2)/1.2)/25)
-#define	cbSetChecked(a) ctrlSetText(if(a)then{"\swt_markers_a2\CheckBox_checked_ca.paa"}else{"\swt_markers_a2\CheckBox_unchecked_ca.paa"})
+#define	cbSetChecked(a) ctrlSetText(if(a)then{"\swt_markers\data\CheckBox_checked_ca.paa"}else{"\swt_markers\data\CheckBox_unchecked_ca.paa"})
 
 swt_markers_disable = false;
 swt_markers_load_enabled = true;
@@ -17,7 +17,8 @@ swt_markers_bis_markers = false;
 sweetk_s = 1;
 swt_markers_time = 0;
 swt_markers_MapTime = 0;
-swt_markers_fast_text_N = false;
+// swt_markers_fast_text_N = false;
+swt_markers_fast_text_N = true;
 swt_markers_fast_text_G = false;
 swt_markers_fast_text_T = false;
 swt_markers_shiftState =  false;
@@ -28,8 +29,8 @@ swt_markers_delayCoeff = 25;
 
 if (isNil "swt_markers_pos_m") then {swt_markers_pos_m = [0,0]};
 
-call compile preprocessfilelinenumbers '\swt_markers_a2\UI\MapHandlers.sqf';
-call compile preprocessfilelinenumbers '\swt_markers_a2\UI\DisplayHandlers.sqf';
+call compile preprocessfilelinenumbers '\swt_markers\UI\MapHandlers.sqf';
+call compile preprocessfilelinenumbers '\swt_markers\UI\DisplayHandlers.sqf';
 
 swt_markers_available_channels = [localize "str_channel_global",localize "str_channel_side",localize "str_channel_command",localize "str_channel_group",localize "str_channel_vehicle",localize "str_channel_direct"];
 swt_markers_unavailable_channels = getArray (missionconfigfile >> "disableChannels");
@@ -89,10 +90,14 @@ swt_markers_log = {
 
 	_action = _this select 0;
 	_params = _this select 1;
-	if (swt_markers_logging) then {
-		if !(player diarySubjectExists "SwtMarkersLog") then {
-			player createDiarySubject ["SwtMarkersLog","SWT Markers"];
+	if (swt_markers_logging) then 
+	{
+		/*
+		if !(player diarySubjectExists "SwtMarkersLog") then 
+		{
+			player createDiarySubject ["SwtMarkersLog", localize "STR_SWT_MARKERS"];
 		};
+		*/
 
 		_sep = "<img image='#(argb,8,8,3)color(1,1,1,0.1)' height='2' width='512' />";
 		_text = "";
@@ -161,7 +166,7 @@ swt_markers_log = {
 		    	_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKLOAD") + _sep, _colorname, _count];
 		    };
 		};
-		player createDiaryRecord ["SwtMarkersLog", ["Log", _text]];
+		player createDiaryRecord ["SwtMarkersLog", [localize "STR_SWT_LOGS", _text]];
 	};
 };
 
@@ -249,7 +254,7 @@ swt_markers_showInfo = {
 				_colorname = [_name,"t"] call swt_markers_getColorName;
 				_Type = _x select 4;
 				_ctrl_info ctrlSetStructuredText parseText format ["<t size='0.8'>\
-<t align='center' color='#F88379'>%1 ID: %2" + (if (!isNil {_x select 10}) then {localize "STR_SWT_M_INFOLOADED"} else {""}) + "</t><br/>" + (localize "STR_SWT_M_INFOWIN") + (_time call _getFormatedTime) + "</t>",
+<t align='center' color='#F88379'>%1 ID: %2" + (if (!isNil {_x select 11}) then {localize "STR_SWT_M_INFOLOADED"} else {""}) + "</t><br/>" + (localize "STR_SWT_M_INFOWIN") + (_time call _getFormatedTime) + "</t>",
 				(if (_Type==-2) then {localize "STR_SWT_M_LINE"} else {if (_Type==-3) then {localize "STR_SWT_M_ELLIPSE"} else {localize "STR_SWT_M_MARKER"}}), _id, _colorname, _channel];
 
 				_ctrl_pos = ctrlPosition _ctrl_info;
@@ -402,7 +407,7 @@ swt_markers_lb_sel = {
 	    	_class = (_this select 0) lbData (_this select 1);
 	    	if (_class == "" or {_class == (swt_marker_color_slot_params select _num)}) exitWith {};
 	    	swt_marker_color_slot_params set [_num,_class];
-	    	profileNamespace setVariable ["swt_marker_color_slot_params", swt_marker_color_slot_params];
+	    	profileNamespace setVariable ["ap_swt_marker_color_slot_params", swt_marker_color_slot_params];
 	    	saveProfileNamespace;
 	    	_slot_color = getArray (configFile >> "CfgMarkerColors" >> _class >> "color");
 
@@ -419,7 +424,7 @@ swt_markers_lb_sel = {
 	     	_class = (_this select 0) lbData (_this select 1);
 	     	if (_class == "" or {_class == (swt_marker_icon_slot_params select (_num-6))}) exitWith {};
 	     	swt_marker_icon_slot_params set [_num-6,_class];
-	    	profileNamespace setVariable ["swt_marker_icon_slot_params", swt_marker_icon_slot_params];
+	    	profileNamespace setVariable ["ap_swt_marker_icon_slot_params", swt_marker_icon_slot_params];
 	    	saveProfileNamespace;
 	    	_slot_icon = getText (configFile >> "CfgMarkers" >> _class >> "icon");
 	    	((ctrlParent (_this select 0)) displayCtrl (1300+_num-6)) ctrlSetText _slot_icon;
@@ -459,21 +464,21 @@ swt_markers_lb_sel_adv = {
 
 swt_markers_profileNil = {
 	_version = 2;
-	if (isNil {profileNamespace getVariable "swt_markers_params_version"}) then {
-		profileNamespace setVariable ["swt_markers_params_version", _version];
+	if (isNil {profileNamespace getVariable "ap_swt_markers_params_version"}) then {
+		profileNamespace setVariable ["ap_swt_markers_params_version", _version];
 		saveProfileNamespace;
 		call swt_def;
 	};
-	if ((profileNamespace getVariable "swt_markers_params_version") != _version) exitWith {
+	if ((profileNamespace getVariable "ap_swt_markers_params_version") != _version) exitWith {
 		systemChat (localize "STR_SWT_M_MESS_OLD");
-		profileNamespace setVariable ["swt_markers_params_version", _version];
+		profileNamespace setVariable ["ap_swt_markers_params_version", _version];
 		saveProfileNamespace;
 		call swt_def;
 	};
 
-	swt_marker_color_slot_params = [] + (call compile (str (profileNamespace getVariable "swt_marker_color_slot_params")));
-	swt_marker_icon_slot_params = [] + (call compile (str (profileNamespace getVariable "swt_marker_icon_slot_params")));
-	swt_marker_settings_params = [] + (call compile (str (profileNamespace getVariable "swt_marker_settings_params")));
+	swt_marker_color_slot_params = [] + (call compile (str (profileNamespace getVariable "ap_swt_marker_color_slot_params")));
+	swt_marker_icon_slot_params = [] + (call compile (str (profileNamespace getVariable "ap_swt_marker_icon_slot_params")));
+	swt_marker_settings_params = [] + (call compile (str (profileNamespace getVariable "ap_swt_marker_settings_params")));
 	swt_markers_show_butt = swt_marker_settings_params select 0;
 	swt_markers_show_icon = swt_marker_settings_params select 1;
 	swt_markers_show_color = swt_marker_settings_params select 2;
@@ -487,18 +492,25 @@ swt_markers_profileNil = {
 	swt_markers_logging = swt_marker_settings_params select 10;
 	swt_markers_mark_info = swt_marker_settings_params select 11;
 
-	 swt_cfgMarkerColors = [];
+	swt_cfgMarkerColors = [];
 	_cfg = (configfile >> "CfgMarkerColors");
-	for "_i" from 0 to (count _cfg) - 1 do {
-		swt_cfgMarkerColors set [count swt_cfgMarkerColors, _cfg select _i];
+	for "_i" from 0 to (count _cfg) - 1 do 
+	{
+		if (getNumber (_cfg select _i >> 'scope') > 1) then 
+		{
+			swt_cfgMarkerColors set [count swt_cfgMarkerColors, _cfg select _i];
+		};
 	};
-	_cfg = (configfile >> "CfgMarkers");
 	swt_cfgMarkers = [];
-	for "_i" from 0 to (count _cfg) - 1 do {
-		if (getNumber (_cfg select _i >> 'scope') > 0 && !(getText (_cfg select _i >> 'markerClass') in ['NATO_Sizes','Locations','Flags'])) then {
+	_cfg = (configfile >> "CfgMarkers");
+	for "_i" from 0 to (count _cfg) - 1 do 
+	{
+		if (getNumber (_cfg select _i >> 'scope') > 1 && !(getText (_cfg select _i >> 'markerClass') in ['NATO_Sizes','Locations','Flags'])) then 
+		{
 			swt_cfgMarkers set [count swt_cfgMarkers, _cfg select _i];
 		};
 	};
+
 	if (isNil {swt_cfgMarkerColors_names}) then {
 		 swt_cfgMarkerColors_names = [];
 		 {swt_cfgMarkerColors_names set [count swt_cfgMarkerColors_names, (configName _x)]} forEach swt_cfgMarkerColors;
@@ -530,9 +542,10 @@ swt_markers_profileNil = {
 
 swt_def = {
 	systemChat (localize "STR_SWT_M_MESS_DEF");
-	profileNamespace setVariable ["swt_marker_color_slot_params", ["ColorBlue","ColorRed","ColorGreen","ColorBlack","ColorWhite","ColorYellow"]];
-	profileNamespace setVariable ["swt_marker_icon_slot_params", ["mil_dot","o_inf","o_armor","hd_pickup","hd_warning","hd_unknown"]];
-	profileNamespace setVariable ["swt_marker_settings_params", [false,true,true,false,true,false,true,true,true,"",true, true]];
+	profileNamespace setVariable ["ap_swt_marker_color_slot_params", ["ColorBlue","ColorRed","ColorGreen","ColorBlack","ColorWhite","ColorOrange"]];
+	profileNamespace setVariable ["ap_swt_marker_icon_slot_params", ["tu_dot","tu_o_inf","tu_o_armor","nm_o_air","hd_pickup","nm_kv"]];
+//	profileNamespace setVariable ["ap_swt_marker_settings_params", [false,true,true,false,true,false,false,true,true,"",true, true]];
+	profileNamespace setVariable ["ap_swt_marker_settings_params", [true,true,true,true,true,false,false,true,true,"",true, true]];
 	saveProfileNamespace;
 	call swt_markers_profileNil;
 };
@@ -702,7 +715,7 @@ swt_get_mark_param = {
 	[_mark,[_markerType,_markerColor,_markerPos,_markerText,_markerDir,_markerSize,_markerAlpha]];
 };
 
-swt_markers_cb_butt = compile preprocessFileLineNumbers '\swt_markers_a2\UI\checkBoxesSett.sqf';
+swt_markers_cb_butt = compile preprocessFileLineNumbers '\swt_markers\UI\checkBoxesSett.sqf';
 
 
 swt_str_Replace = {
@@ -741,7 +754,7 @@ swt_markers_fnc_save_markers = {
 		_tmp = [_tmp select 2,_tmp select 3,_tmp select 4,_tmp select 5, _tmp select 6, _tmp select 7];
 		_arr_copy set [count _arr_copy, (+ _tmp)];
 	} forEach _arr;
-	if (((typeName _this) == "STRING") && {_this == "CLIP"})then {copyToClipboard str _arr_copy} else {profileNamespace setVariable ["swt_markers_save_arr", _arr_copy]};
+	if (((typeName _this) == "STRING") && {_this == "CLIP"})then {copyToClipboard str _arr_copy} else {profileNamespace setVariable ["ap_swt_markers_save_arr", _arr_copy]};
 	saveProfileNamespace;
 	systemChat format [localize "STR_SWT_M_MESS_SAVEDMARKS", count _arr_copy];
 };
@@ -749,7 +762,7 @@ swt_markers_fnc_save_markers = {
 swt_markers_fnc_load_markers = {
 	if (swt_markers_load_enabled and(((swt_markers_load_enabled_for) and (((leader player == player) or (((effectiveCommander (vehicle player)) == player) and (vehicle player != player))))) or (!swt_markers_load_enabled_for))and((swt_markers_load_enabled_when)or((!swt_markers_load_enabled_when)and!(time>0)))) then {
 		private ["_arr"];
-		_arr =  (if (isNil {_this select 1}) then {[] + (profileNamespace getVariable "swt_markers_save_arr")} else {call compile ("[]+" + ([(_this select 1),";",""] call swt_str_Replace) + "+[]")});
+		_arr =  (if (isNil {_this select 1}) then {[] + (profileNamespace getVariable "ap_swt_markers_save_arr")} else {call compile ("[]+" + ([(_this select 1),";",""] call swt_str_Replace) + "+[]")});
 		if !(count _arr == 0) then {
 			if (count _arr > 500) exitWith {systemChat (format [localize "STR_SWT_M_MESS_CANTLOAD", count _arr, 500]);};
 			_copy_arr = [];
@@ -786,44 +799,4 @@ swt_markers_scale = {
 		_new_h
 	];
 	(_display displayCtrl 204) ctrlCommit 0;
-};
-
-
-swt_markers_info_buttons = {
-	disableSerialization;
-	private ["_pos","_act","_control","_display"];
-	_control = _this select 0;
-	_display = ctrlParent (_this select 0);
-	_act = _this select 1;
-	switch (_act) do {
-	    case 'info': {
-	    	_pos = ctrlPosition (_display displayCtrl 1101);
-	    	(_display displayCtrl 1101) ctrlSetPosition [_pos select 0, _pos select 1, _pos select 2, 25 * ((((safezoneW / safezoneH) min 1.2) / 1.2) / 25)];
-	    	(_display displayCtrl 1101) ctrlCommit 0;
-	    	(_display displayCtrl 1101) ctrlsetstructuredtext parsetext format [
-	    			localize "STR_SWT_M_INFOTXT",
-					"#F88379"
-				];
-	    };
-
-	     case 'sett': {
-	     	_pos = ctrlPosition (_display displayCtrl 1101);
-	    	(_display displayCtrl 1101) ctrlSetPosition [_pos select 0, _pos select 1, _pos select 2, 20 * ((((safezoneW / safezoneH) min 1.2) / 1.2) / 25)];
-	    	(_display displayCtrl 1101) ctrlCommit 0;
-	    	(_display displayCtrl 1101) ctrlsetstructuredtext parsetext format [
-					localize "STR_SWT_M_SETTXT",
-					"#F88379"
-				];
-	    };
-
-	     case 'author': {
-	     	_pos = ctrlPosition (_display displayCtrl 1101);
-	    	(_display displayCtrl 1101) ctrlSetPosition [_pos select 0, _pos select 1, _pos select 2, 10 * ((((safezoneW / safezoneH) min 1.2) / 1.2) / 25)];
-	    	(_display displayCtrl 1101) ctrlCommit 0;
-	    	(_display displayCtrl 1101) ctrlsetstructuredtext parsetext format [
-					localize "STR_SWT_M_ATXT",
-					"#F88379","http://goo.gl/AcloSD","http://goo.gl/rc5eKA"
-				];
-	    };
-	};
 };

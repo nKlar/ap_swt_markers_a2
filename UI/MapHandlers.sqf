@@ -102,7 +102,7 @@ swt_markers_MapMouseDown = {
 						_pos = (_display displayCtrl 51) ctrlMapScreenToWorld _pos_click;
 						_roads = _pos nearRoads 50;
 						_min = _roads select 0;
-						if (isNil {_min}) exitWith {hint "SWT MARKERS: ROAD NOT FOUND"};
+						if (isNil {_min}) exitWith {hint localize "STR_SWT_RNF"};
 						{
 							if (_x distance _pos < _min distance _pos) then {_min = _x};
 						} forEach _roads;
@@ -113,7 +113,7 @@ swt_markers_MapMouseDown = {
 								_pos = getMarkerPos _x;
 								_pos = _ctrl ctrlMapWorldToScreen _pos;
 								if (([_pos,_pos_click] call bis_fnc_distance2D) < 0.025) exitWith {
-									if (name player == ((swt_markers_allMarkers_params select _forEachIndex) select 8)) then {
+									if (name player == ((swt_markers_allMarkers_params select _forEachIndex) select 8) && _x == ((swt_markers_allMarkers_params select _forEachIndex) select 0)) then {
 										swt_mark_to_change_pos = _x;
 										swt_markers_position = getMarkerPos _x;
 									} else {

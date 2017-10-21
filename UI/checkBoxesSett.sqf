@@ -31,8 +31,8 @@ switch (_this select 1) do {
 
 		swt_markers_show_butt = !(swt_markers_show_butt);
 		swt_marker_settings_params set [0,swt_markers_show_butt];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
-
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
+		saveProfileNamespace;
 		_control_button = (_display displayCtrl 2400);
 		_pos_control_button = (ctrlPosition _control_button);
 		_butt_cor_pos = -1.1*(1 * ((((safezoneW / safezoneH) min 1.2) / 1.2) / 25));
@@ -64,7 +64,7 @@ switch (_this select 1) do {
     case 'SHOW ICON': {
 		swt_markers_show_icon = !(swt_markers_show_icon);
 		swt_marker_settings_params set [1,swt_markers_show_icon];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 		if (swt_markers_show_icon) then {
 			{
@@ -93,7 +93,7 @@ switch (_this select 1) do {
      case 'SHOW COLOR': {
 		swt_markers_show_color = !(swt_markers_show_color);
 		swt_marker_settings_params set [2,swt_markers_show_color];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 			if (swt_markers_show_color) then {
 			{
@@ -122,7 +122,7 @@ switch (_this select 1) do {
     case 'SHOW LB': {
     	swt_markers_show_lb = !(swt_markers_show_lb);
 		swt_marker_settings_params set [3,swt_markers_show_lb];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 		if (swt_markers_show_lb) then {
 			{
@@ -154,21 +154,21 @@ switch (_this select 1) do {
     case 'FAST LOAD': {
     	swt_markers_save_mode = !swt_markers_save_mode;
     	swt_marker_settings_params set [4,swt_markers_save_mode];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 	};
 
 	case 'SAVE TEXT': {
 		swt_markers_save_text = !(swt_markers_save_text);
     	swt_marker_settings_params set [5,swt_markers_save_text];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 	};
 
 	case 'SHOW INFO': {
 		swt_markers_show_info = !(swt_markers_show_info);
     	swt_marker_settings_params set [6,swt_markers_show_info];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 		if (!isnil "RscDisplayInsertMarker_info") then {
 			((findDisplay 54) displayctrl 2400) call swt_markers_infoAnim;
@@ -195,7 +195,7 @@ switch (_this select 1) do {
 	case 'SHOW BACK': {
 		swt_markers_show_back = !(swt_markers_show_back);
     	swt_marker_settings_params set [7,swt_markers_show_back];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 		if (swt_markers_show_back) then {
 			for "_i" from 0 to 40 do {
@@ -213,21 +213,21 @@ switch (_this select 1) do {
 	case 'SAVE MARK': {
 		swt_markers_save_mark = !(swt_markers_save_mark);
     	swt_marker_settings_params set [8,swt_markers_save_mark];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 	};
 
 	case 'LOG': {
 		swt_markers_logging = !(swt_markers_logging);
     	swt_marker_settings_params set [10,swt_markers_logging];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 	};
 
 	case 'MARK INFO': {
 		swt_markers_mark_info = !(swt_markers_mark_info);
     	swt_marker_settings_params set [11,swt_markers_mark_info];
-		profileNamespace setVariable ["swt_marker_settings_params", swt_marker_settings_params];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 		_displayMap = ({if !(isNull(findDisplay _x)) exitWith {findDisplay _x}} forEach [37,52,53,12]);
 		(_displayMap displayCtrl 228) ctrlShow false;
