@@ -1,6 +1,5 @@
 swt_markers_allMarkers = [];
 swt_markers_allMarkers_params = [];
-swt_markers_DisableLoc = false;
 
 swt_markers_getChannel = {
 	(swt_markers_allMarkers_params select (swt_markers_allMarkers find _this)) select 1;
@@ -18,7 +17,7 @@ swt_markers_createMarker = {
 	_Dir   = _params select 6;
 	_Scale = _params select 7;
 	_Name  = _params select 8;
-	_Sender = _params select 10;
+	_Sender = _params select 10; //ADDED BY NKLAR
 
 	swt_markers_allMarkers set [count swt_markers_allMarkers,_mark];
 	swt_markers_allMarkers_params set [count swt_markers_allMarkers_params, _params];
@@ -69,7 +68,6 @@ swt_markers_createMarker = {
 swt_markers_sys_sendMark = compile preprocessFileLineNumbers '\swt_markers\Logic\sendMark.sqf';
 
 swt_markers_logicClient_create = {
-	if (swt_markers_DisableLoc) exitWith {diag_log "SWT MARKERS: MARKERS DISABLED"};
 	_this call swt_markers_createMarker;
 	["CREATE", _this] call swt_markers_log;
 };
@@ -94,7 +92,6 @@ swt_markers_logicClient_del = {
 };
 
 swt_markers_logicClient_dir = {
-	if (swt_markers_DisableLoc) exitWith {diag_log "SWT MARKERS: MARKERS DISABLED"};
 	_mark = _this select 0;
 	if (_mark in swt_markers_allMarkers) then {
 		_dir = _this select 1;
@@ -112,7 +109,6 @@ swt_markers_logicClient_dir = {
 };
 
 swt_markers_logicClient_pos = {
-	if (swt_markers_DisableLoc) exitWith {diag_log "SWT MARKERS: MARKERS DISABLED"};
 	_mark = _this select 0;
 	if (_mark in swt_markers_allMarkers) then {
 		_pos = _this select 1;
@@ -131,7 +127,6 @@ swt_markers_logicClient_pos = {
 
 swt_markers_logicClient_load = {
 	_player = _this select 0;
-	if (swt_markers_DisableLoc) exitWith {diag_log "SWT MARKERS: MARKERS DISABLED"};
 
 	{
 		_x call swt_markers_createMarker;
@@ -147,19 +142,9 @@ swt_markers_clear_map = {
 	swt_markers_allMarkers_params = [];
 };
 
-swt_markers_DisableLoc_fnc = {
-	disableSerialization;
-	_ctrl = _this;
-	swt_markers_DisableLoc = !swt_markers_DisableLoc;
-	if (swt_markers_DisableLoc) then {
-		_ctrl ctrlSetText localize "STR_SWT_M_ENABLE";
-	} else {
-		_ctrl ctrlSetText localize "STR_SWT_M_DISABLE";
-	};
-};
 
 nk_swt_markers_parse_frequency = {
-	private["_text", "_array", "_min", "_max", "_title", "_chastoty", "_sdvigi", "_arrayDouble", "_i", "_titleReady", "_prefix", "_Sender"];
+	private["_text", "_array", "_min", "_max", "_title", "_frequencies", "_shifts", "_arrayDouble", "_i", "_titleReady", "_prefix", "_Sender"];
 	_text = _this select 0;
 	_array = toArray _text;
 	_array = _array - [60,62];
@@ -168,8 +153,8 @@ nk_swt_markers_parse_frequency = {
 	_Sender = _this select 3;
 
 	_title = [];
-	_chastoty = [];
-	_sdvigi = [];
+	_frequencies = [];
+	_shifts = [];
 	_arrayDouble = [];
 	_i = 0;
 	_titleReady = false;
@@ -192,14 +177,14 @@ nk_swt_markers_parse_frequency = {
 			if(_prefix != -1) then
 			{
 				_prefix = toString [_prefix];
-				_sdvigi set[count _sdvigi, format["%1%2",_prefix,_double]];
+				_shifts set[count _shifts, format["%1%2",_prefix,_double]];
 				_prefix = -1;
 			}
 			else
 			{
 				if(_double >= _min && _double <= _max) then
 				{
-					_chastoty set[count _chastoty, _double];
+					_frequencies set[count _frequencies, _double];
 					_titleReady = true;
 				};
 			};
@@ -248,19 +233,19 @@ nk_swt_markers_parse_frequency = {
 
 	_parsed = _parsed + '<br/>';
 
-	if((count _chastoty) > 0) then
+	if((count _frequencies) > 0) then
 	{
-		_parsed = _parsed + format[(localize "STR_NK_FQ_MAIN"), _chastoty select 0] + '<br/>';
-		for [{_i=1},{_i<(count _chastoty)},{_i=_i+1}] do
+		_parsed = _parsed + format[(localize "STR_NK_FQ_MAIN"), _frequencies select 0] + '<br/>';
+		for [{_i=1},{_i<(count _frequencies)},{_i=_i+1}] do
 		{
-			_parsed = _parsed + format[(localize "STR_NK_FQ_N"), _i, _chastoty select _i] + '<br/>';
+			_parsed = _parsed + format[(localize "STR_NK_FQ_N"), _i, _frequencies select _i] + '<br/>';
 		};
 	};
-	if((count _sdvigi) > 0) then
+	if((count _shifts) > 0) then
 	{
-		for [{_i=0},{_i<(count _sdvigi)},{_i=_i+1}] do
+		for [{_i=0},{_i<(count _shifts)},{_i=_i+1}] do
 		{
-			_parsed = _parsed + format[(localize "STR_NK_FQ_ST"), _i+1, _sdvigi select _i] + '<br/>';
+			_parsed = _parsed + format[(localize "STR_NK_FQ_ST"), _i+1, _shifts select _i] + '<br/>';
 		};
 	};
 	_parsed;
@@ -279,7 +264,7 @@ nk_swt_markers_parse_squad = {
 	(toString _array);
 };
 
-0 spawn {
+[] spawn {
 	"swt_markers_send_mark"  addPublicVariableEventHandler {
 		(_this select 1) call swt_markers_logicClient_create;
 	};

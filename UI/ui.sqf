@@ -380,11 +380,6 @@ swt_markers_adv_set_butt = {
 		(_display displayCtrl 245) cbSetChecked(swt_markers_save_mark);
 		(_display displayCtrl 247) cbSetChecked(swt_markers_logging);
 		(_display displayCtrl 249) cbSetChecked(swt_markers_mark_info);
-		if (swt_markers_DisableLoc) then {
-			(_display displayCtrl 350) ctrlSetText (localize "STR_SWT_M_ENABLE");
-		} else {
-			(_display displayCtrl 350) ctrlSetText (localize "STR_SWT_M_DISABLE");
-		};
 		(_display displayCtrl 451) ctrlSetText swt_markers_fast_text_T_saved;
 		(_display displayCtrl 1104) ctrlShow true;
 		(_display displayCtrl 1104) ctrlSetFade 0;
@@ -505,7 +500,7 @@ swt_markers_profileNil = {
 	_cfg = (configfile >> "CfgMarkers");
 	for "_i" from 0 to (count _cfg) - 1 do 
 	{
-		if (getNumber (_cfg select _i >> 'scope') > 1 && !(getText (_cfg select _i >> 'markerClass') in ['NATO_Sizes','Locations','Flags'])) then 
+		if (getNumber (_cfg select _i >> 'scope') > 1) then 
 		{
 			swt_cfgMarkers set [count swt_cfgMarkers, _cfg select _i];
 		};

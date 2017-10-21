@@ -289,37 +289,34 @@ swt_markers_logicServer_load = {
 	} forEach (playableUnits+switchableUnits);
 };
 
-0 spawn {
+[] spawn {
 	swt_markers_daytime = daytime;
 	publicVariable "swt_markers_daytime";
 
-	swt_cfgMarkerColors = [];
+	swt_cfgMarkerColors_names = [];
 	_cfg = (configfile >> "CfgMarkerColors");
 	for "_i" from 0 to (count _cfg) - 1 do
 	{
-		if (getNumber (_cfg select _i >> 'scope') > 1) then
+		_color = _cfg select _i;
+		if (getNumber (_color >> 'scope') > 1) then
 		{
-			swt_cfgMarkerColors set [count swt_cfgMarkerColors, _cfg select _i];
+			swt_cfgMarkerColors_names set [count swt_cfgMarkerColors_names, (configName _color)];
 		};
 	};
-
-	swt_cfgMarkers = [];
-	_cfg = (configfile >> "CfgMarkers");
-	for "_i" from 0 to (count _cfg) - 1 do
-	{
-		if (getNumber (_cfg select _i >> 'scope') > 1 && !(getText (_cfg select _i >> 'markerClass') in ['NATO_Sizes','Locations','Flags'])) then
-		{
-			swt_cfgMarkers set [count swt_cfgMarkers, _cfg select _i];
-		};
-	};
-
-	swt_cfgMarkerColors_names = [];
-	{swt_cfgMarkerColors_names set [count swt_cfgMarkerColors_names, (configName _x)]} forEach swt_cfgMarkerColors;
 	if (count swt_cfgMarkerColors_names != 0) then {publicVariable "swt_cfgMarkerColors_names"};
 
 	swt_cfgMarkers_names = [];
-	{swt_cfgMarkers_names set [count swt_cfgMarkers_names, (configName _x)]} forEach swt_cfgMarkers;
+	_cfg = (configfile >> "CfgMarkers");
+	for "_i" from 0 to (count _cfg) - 1 do
+	{
+		_marker = _cfg select _i;
+		if (getNumber (_marker >> 'scope') > 1) then
+		{
+			swt_cfgMarkers_names set [count swt_cfgMarkers_names, (configName _marker)];
+		};
+	};
 	if (count swt_cfgMarkers_names != 0) then {publicVariable "swt_cfgMarkers_names"};
+
 
 	"swt_markers_sys_client_send" addPublicVariableEventHandler {
 		(_this select 1) call swt_markers_logicServer_regMark;
