@@ -271,7 +271,7 @@ nk_swt_markers_parse_squad = {
 		(_this select 1) call swt_markers_logicClient_load;
 	};
 
-	waitUntil {!isNull player; sleep 0.5};
+	waitUntil {!isNull player};
 	swt_markers_sys_req_markers = player;
 	publicVariableServer "swt_markers_sys_req_markers";
 	player createDiarySubject ["SwtMarkersLog", localize "STR_SWT_MARKERS"];

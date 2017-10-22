@@ -765,6 +765,7 @@ swt_markers_fnc_load_markers = {
 			{
 				_copy_arr set [count _copy_arr, (["",""] + _x)];
 			} forEach _arr;
+
 			swt_markers_sys_load = [player, _copy_arr];
 			publicVariableServer "swt_markers_sys_load";
 			if (isServer && !isMultiplayer) then {swt_markers_sys_load call swt_markers_logicServer_load;};

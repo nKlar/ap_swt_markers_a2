@@ -265,7 +265,7 @@ swt_markers_logicServer_load = {
 	_data = _this select 1;
 	{
 		swt_markers_count = swt_markers_count + 1;
-		_x set [0, "SWT_M#"+ str swt_markers_count];
+		_x set [0, "SWT_M_L#"+ str swt_markers_count];
 		_x set [1, "S"];
 		_x set [count _x, (name _player)];
 		_x set [count _x, time];
