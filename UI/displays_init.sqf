@@ -5,16 +5,6 @@ _addHandlers = {
 	disableSerialization;
 	_mapDisplay = _this;
 	_control = _mapDisplay displayCtrl 51;
-	_id0 = _control ctrlAddEventHandler ["MouseButtonDblClick", "\
-	_this spawn {\
-		if ((_this select 1) == 0) then {\
-			swt_markers_display_coord = [(_this select 2),(_this select 3)];\
-			(findDisplay 54) closeDisplay 2;\
-			(ctrlParent (_this select 0)) createDisplay 'swt_RscDisplayInsertMarker';\
-		};\
-		true\
-	}\
-	"];
 	_id1 = _control ctrlAddEventHandler ["MouseButtonDown", "_this call swt_markers_MapMouseDown"];
 	_id2 = _control ctrlAddEventHandler ["MouseButtonUp", "_this call swt_markers_MapMouseUp"];
 	_id3 = (_mapDisplay) displayAddEventHandler ["KeyDown", "_this call swt_markers_MapKeyDown"];

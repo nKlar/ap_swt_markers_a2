@@ -426,7 +426,7 @@ class RscDisplayChannel
 {
 	onLoad="[_this select 0] spawn {swt_markers_channel = ctrlText ((_this select 0) displayCtrl 101)}";
 };
-class swt_RscDisplayInsertMarker
+class RscDisplayInsertMarker
 {
 	enableSimulation=0;
 	onLoad="_this call swt_markers_onLoad";
@@ -461,6 +461,9 @@ class swt_RscDisplayInsertMarker
 	};
 	class controls
 	{
+		delete ButtonOK;
+		delete Picture;
+		delete Text;
 		class swt_Text: RscEdit
 		{
 			idc=203;

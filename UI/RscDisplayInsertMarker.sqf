@@ -38,7 +38,6 @@ private ['_display','_text','_picture','_buttonOK','_buttonCancel','_control','_
 		_delay = 0.2;
 
 		if (isnil "RscDisplayInsertMarker_info") then {
-
 			{
 				_pos = ctrlPosition (_display displayCtrl _x);
 				(_display displayCtrl _x) ctrlSetPosition [(_pos select 0)+1.1*((ctrlPosition (_display displayCtrl 203)) select 2),_pos select 1,_pos select 2,_pos select 3];
