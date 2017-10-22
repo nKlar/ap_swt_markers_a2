@@ -90,10 +90,10 @@ swt_markers_log = {
 
 	_action = _this select 0;
 	_params = _this select 1;
-	if (swt_markers_logging) then 
+	if (swt_markers_logging) then
 	{
 		/*
-		if !(player diarySubjectExists "SwtMarkersLog") then 
+		if !(player diarySubjectExists "SwtMarkersLog") then
 		{
 			player createDiarySubject ["SwtMarkersLog", localize "STR_SWT_MARKERS"];
 		};
@@ -239,35 +239,36 @@ swt_markers_showInfo = {
 
 	_ctrl_info = _display displayCtrl 228;
 	_find = false;
-	{
-		_pos = getMarkerPos (_x select 0);
-		_pos = (_this select 0) ctrlMapWorldToScreen _pos;
-		if (([_pos,swt_markers_pos_m] call bis_fnc_distance2D) < 0.025) exitWith {
-			_find = true;
-			if (swt_markers_hold) then {
-				_mark = _x select 0;
-				_id = _mark;
-				_name = _x select 8;
-				_channel = _x select 1;
-				_channel = [_channel,"t"] call swt_markers_getColorChannel;
-				_time = _x select 9;
-				_colorname = [_name,"t"] call swt_markers_getColorName;
-				_Type = _x select 4;
-				_ctrl_info ctrlSetStructuredText parseText format ["<t size='0.8'>\
-<t align='center' color='#F88379'>%1 ID: %2" + (if (!isNil {_x select 11}) then {localize "STR_SWT_M_INFOLOADED"} else {""}) + "</t><br/>" + (localize "STR_SWT_M_INFOWIN") + (_time call _getFormatedTime) + "</t>",
-				(if (_Type==-2) then {localize "STR_SWT_M_LINE"} else {if (_Type==-3) then {localize "STR_SWT_M_ELLIPSE"} else {localize "STR_SWT_M_MARKER"}}), _id, _colorname, _channel];
 
-				_ctrl_pos = ctrlPosition _ctrl_info;
-				if ((markerText _mark) == "") then {
-					_ctrl_info ctrlSetPosition [(_pos select 0) - (0.05)/2 + 0.07, (_pos select 1) - (_ctrl_pos select 3)/2, _ctrl_pos select 2, _ctrl_pos select 3];
-				} else {
-					_ctrl_info ctrlSetPosition [(_pos select 0) + (0.05)/2 - 0.07 - (_ctrl_pos select 2), (_pos select 1) - (_ctrl_pos select 3)/2, _ctrl_pos select 2, _ctrl_pos select 3];
-				};
-				_ctrl_info ctrlCommit 0;
-				_ctrl_info ctrlShow true;
+	_mark = ctrlMapMouseOver (_display displayCtrl 51);
+    _mark = if(count _mark > 1) then {_mark select 1};
+	_pos = getMarkerPos _mark;
+	_pos = (_this select 0) ctrlMapWorldToScreen _pos;
+    _index = swt_markers_allMarkers find _mark;
+	if (_index >= 0) exitWith {
+		_find = true;
+		if (swt_markers_hold) then {
+			_markParams = swt_markers_allMarkers_params select _index;
+			_name = _markParams select 8;
+			_channel = _markParams select 1;
+			_channel = [_channel,"t"] call swt_markers_getColorChannel;
+			_time = _markParams select 9;
+			_colorname = [_name,"t"] call swt_markers_getColorName;
+			_Type = _markParams select 4;
+			_ctrl_info ctrlSetStructuredText parseText format ["<t size='0.8'>\
+			<t align='center' color='#F88379'>%1 ID: %2" + (if (!isNil {_markParams select 11}) then {localize "STR_SWT_M_INFOLOADED"} else {""}) + "</t><br/>" + (localize "STR_SWT_M_INFOWIN") + (_time call _getFormatedTime) + "</t>",
+			(if (_Type==-2) then {localize "STR_SWT_M_LINE"} else {if (_Type==-3) then {localize "STR_SWT_M_ELLIPSE"} else {localize "STR_SWT_M_MARKER"}}), _mark, _colorname, _channel];
+			_ctrl_pos = ctrlPosition _ctrl_info;
+			if ((markerText _mark) == "") then {
+				_ctrl_info ctrlSetPosition [(_pos select 0) - (0.05)/2 + 0.07, (_pos select 1) - (_ctrl_pos select 3)/2, _ctrl_pos select 2, _ctrl_pos select 3];
+			} else {
+				_ctrl_info ctrlSetPosition [(_pos select 0) + (0.05)/2 - 0.07 - (_ctrl_pos select 2), (_pos select 1) - (_ctrl_pos select 3)/2, _ctrl_pos select 2, _ctrl_pos select 3];
 			};
+			_ctrl_info ctrlCommit 0;
+			_ctrl_info ctrlShow true;
 		};
-	} forEach swt_markers_allMarkers_params;
+	};
+
 	if (!_find) then {
 		_ctrl_info ctrlShow false;
 		swt_markers_hold = false;
@@ -489,18 +490,18 @@ swt_markers_profileNil = {
 
 	swt_cfgMarkerColors = [];
 	_cfg = (configfile >> "CfgMarkerColors");
-	for "_i" from 0 to (count _cfg) - 1 do 
+	for "_i" from 0 to (count _cfg) - 1 do
 	{
-		if (getNumber (_cfg select _i >> 'scope') > 1) then 
+		if (getNumber (_cfg select _i >> 'scope') > 1) then
 		{
 			swt_cfgMarkerColors set [count swt_cfgMarkerColors, _cfg select _i];
 		};
 	};
 	swt_cfgMarkers = [];
 	_cfg = (configfile >> "CfgMarkers");
-	for "_i" from 0 to (count _cfg) - 1 do 
+	for "_i" from 0 to (count _cfg) - 1 do
 	{
-		if (getNumber (_cfg select _i >> 'scope') > 1) then 
+		if (getNumber (_cfg select _i >> 'scope') > 1) then
 		{
 			swt_cfgMarkers set [count swt_cfgMarkers, _cfg select _i];
 		};

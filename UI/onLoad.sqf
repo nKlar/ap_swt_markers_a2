@@ -1,5 +1,3 @@
-#define SWT_W 0.025
-#define SWT_H 0.02
 disableSerialization;
 _display = (_this select 0);
 

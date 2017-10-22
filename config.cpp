@@ -26,7 +26,7 @@ class Extended_PreInit_EventHandlers
 {
 	class swt_markers
 	{
-		Init="call compile preProcessFileLineNumbers '\swt_markers\fn_init.sqf'";
+		Init="execVM '\swt_markers\fn_init.sqf'";
 	};
 };
 class CfgMarkers

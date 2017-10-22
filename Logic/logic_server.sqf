@@ -155,6 +155,7 @@ swt_markers_logicServer_change_mark = {
 		switch (toUpper _action) do {
 		    case "DIR": {
 		    	_markParams set [6,_dir];
+		    	_markParams set [9,time];
 		    };
 
 		    case "DEL": {
@@ -165,6 +166,7 @@ swt_markers_logicServer_change_mark = {
 
 			case "POS": {
 			    _markParams set [3,_pos];
+			    _markParams set [9,time];
 			};
 		};
 	};
@@ -208,7 +210,7 @@ swt_markers_logicServer_change_mark = {
 	switch (_action) do {
 	    case "DIR": {
 	    	_dir = _this select 4;
-	    	swt_markers_send_dir = [_mark_id,_dir,_player];
+	    	swt_markers_send_dir = [_mark_id,_dir,_player, time];
 			publicVariable "swt_markers_send_dir";
 			if (hasInterface) then {swt_markers_send_dir call swt_markers_logicClient_dir};
 	    };
@@ -221,7 +223,7 @@ swt_markers_logicServer_change_mark = {
 
 		case "POS": {
 			_pos = _this select 4;
-		   swt_markers_send_pos = [_mark_id,_pos,_player];
+		   swt_markers_send_pos = [_mark_id,_pos,_player, time];
 		   publicVariable "swt_markers_send_pos";
 		   if (hasInterface) then {swt_markers_send_pos call swt_markers_logicClient_pos};
 	   };

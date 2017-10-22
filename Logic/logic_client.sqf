@@ -74,18 +74,14 @@ swt_markers_logicClient_create = {
 
 swt_markers_logicClient_del = {
 	_mark = _this select 0;
-	if (_mark in swt_markers_allMarkers) then {
+	_index = swt_markers_allMarkers find _mark;
+	if (_index > -1) then {
 		_player = _this select 1;
 		deleteMarkerLocal _mark;
-		_paramsOut = [];
+		_paramsOut = swt_markers_allMarkers_params select _index;
 		//Modifying local data
-		{
-			if (_x select 0 == _mark) exitWith {
-				_paramsOut = _x;
-				swt_markers_allMarkers_params set[_forEachIndex, "_DELETE_"];
-				swt_markers_allMarkers_params = swt_markers_allMarkers_params - ["_DELETE_"];
-			};
-		} forEach swt_markers_allMarkers_params;
+		swt_markers_allMarkers_params set[_index, "_DELETE_"];
+		swt_markers_allMarkers_params = swt_markers_allMarkers_params - ["_DELETE_"];
 		swt_markers_allMarkers = swt_markers_allMarkers - [_mark];
 		["DEL", [name _player, _paramsOut]] call swt_markers_log;
 	};
@@ -93,34 +89,30 @@ swt_markers_logicClient_del = {
 
 swt_markers_logicClient_dir = {
 	_mark = _this select 0;
-	if (_mark in swt_markers_allMarkers) then {
+	_index = swt_markers_allMarkers find _mark;
+	if (_index > -1) then {
 		_dir = _this select 1;
 		_player = _this select 2;
+		_time = _this select 3;
 		_mark setMarkerDirLocal _dir;
-		_paramsOut = [];
-		{
-			if (_x select 0 == _mark) exitWith {
-				_x set [6,_dir];
-				_paramsOut = _x;
-			};
-		} forEach swt_markers_allMarkers_params;
+		_paramsOut = swt_markers_allMarkers_params select _index;
+		(swt_markers_allMarkers_params select _index) set [6,_dir];
+		(swt_markers_allMarkers_params select _index) set [9,_time];
 		["DIR", [name _player, _paramsOut]] call swt_markers_log;
 	};
 };
 
 swt_markers_logicClient_pos = {
 	_mark = _this select 0;
-	if (_mark in swt_markers_allMarkers) then {
+	_index = swt_markers_allMarkers find _mark;
+	if (_index > -1) then {
 		_pos = _this select 1;
 		_player = _this select 2;
+		_time = _this select 3;
 		_mark setMarkerPosLocal _pos;
-		_paramsOut = [];
-		{
-			if (_x select 0 == _mark) exitWith {
-				_x set [3,_pos];
-				_paramsOut = _x;
-			};
-		} forEach swt_markers_allMarkers_params;
+		_paramsOut = swt_markers_allMarkers_params select _index;
+		(swt_markers_allMarkers_params select _index) set [3,_pos];
+		(swt_markers_allMarkers_params select _index) set [9,_time];
 		["POS", [name _player, _paramsOut]] call swt_markers_log;
 	};
 };
@@ -133,15 +125,6 @@ swt_markers_logicClient_load = {
 	} forEach (_this select 1);
 	["LOAD", [name _player, count (_this select 1)]] call swt_markers_log;
 };
-
-swt_markers_clear_map = {
-	{
-		deleteMarkerLocal _x;
-	} forEach swt_markers_allMarkers;
-	swt_markers_allMarkers = [];
-	swt_markers_allMarkers_params = [];
-};
-
 
 nk_swt_markers_parse_frequency = {
 	private["_text", "_array", "_min", "_max", "_title", "_frequencies", "_shifts", "_arrayDouble", "_i", "_titleReady", "_prefix", "_Sender"];
@@ -288,7 +271,7 @@ nk_swt_markers_parse_squad = {
 		(_this select 1) call swt_markers_logicClient_load;
 	};
 
-	waitUntil {!isNull player};
+	waitUntil {!isNull player; sleep 0.5};
 	swt_markers_sys_req_markers = player;
 	publicVariableServer "swt_markers_sys_req_markers";
 	player createDiarySubject ["SwtMarkersLog", localize "STR_SWT_MARKERS"];
