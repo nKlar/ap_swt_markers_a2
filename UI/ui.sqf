@@ -431,6 +431,7 @@ swt_markers_lb_sel = {
 
 swt_markers_lb_sel_adv = {
 	disableSerialization;
+	_controls_icon_pic = [1400,1401,1402,1403,1404,1405];
 	ctrlSetFocus ((ctrlParent (_this select 0)) displayCtrl 203);
 	switch ((_this select 2)) do {
 	    case 15000: {
@@ -442,10 +443,9 @@ swt_markers_lb_sel_adv = {
 		        	swt_marker_color_arr set [_forEachIndex, call compile _x];
 		    	};
 		    } forEach swt_marker_color_arr;
-		    ((ctrlParent (_this select 0)) displayCtrl 204) ctrlSetTextColor swt_marker_color_arr;
-		    {
-		    	((ctrlParent (_this select 0)) displayCtrl _x) ctrlSetTextColor swt_marker_color_arr;
-			} forEach _controls_icon_pic;
+			{
+				((ctrlParent (_this select 0)) displayCtrl _x) ctrlSetTextColor swt_marker_color_arr;
+			} forEach _controls_icon_pic+[204];
 	    };
 
 	    case 15001: {

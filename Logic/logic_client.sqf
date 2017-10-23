@@ -263,7 +263,7 @@ swt_markers_resync_markers = {
 		[] spawn
 		{
 			disableSerialization;
-			_timer = 20;
+			_timer = 60;
 			while {_timer > 0} do
 			{
 				_ctrl = ((findDisplay 54) displayCtrl 349);
