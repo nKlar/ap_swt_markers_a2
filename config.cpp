@@ -531,6 +531,16 @@ class RscDisplayInsertMarker
 			h="1 *  ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 			OnButtonClick="_this spawn swt_markers_set_butt";
 		};
+		class show_lb_butt: swt_RscActivePicture
+		{
+			idc=904;
+			text="\swt_markers\data\icon_menu.paa";
+			x=0;
+			y=0;
+			w="0.75 *  ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+			h="1 *  ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+			OnButtonClick="_this spawn swt_markers_show_lb_butt";
+		};
 		class add_group: RscActiveText
 		{
 			idc=903;

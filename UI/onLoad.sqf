@@ -196,7 +196,10 @@ _pos = ctrlPosition _control;
 _control ctrlSetPosition [(ctrlPosition (_text) select 0) + (ctrlPosition (_text) select 2),(ctrlPosition (_text) select 1),_pos select 2,_pos select 3];
 _control ctrlCommit 0;
 
-
+_control = _display displayCtrl 904;
+_pos = ctrlPosition _control;
+_control ctrlSetPosition [(ctrlPosition (_text) select 0) + (ctrlPosition (_text) select 2),(ctrlPosition (_text) select 1)-(ctrlPosition (_display displayCtrl 900) select 3),_pos select 2,_pos select 3];
+_control ctrlCommit 0;
 
 
 {

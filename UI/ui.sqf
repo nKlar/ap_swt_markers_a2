@@ -363,6 +363,38 @@ swt_markers_set_butt = {
 	};
 };
 
+swt_markers_show_lb_butt = {
+		private ["_display","_bool"];
+		disableSerialization;
+		_display = ctrlparent (_this select 0);
+		_bool = ctrlShown (_display displayCtrl 15000);
+		if (!_bool) then {
+		{
+			_control = _display displayCtrl _x;
+			if (ctrlShown _control) exitWith {};
+			_control ctrlSetFade 1; _control ctrlCommit 0;
+			_control ctrlShow true;
+			_control ctrlSetFade 0;
+			_control ctrlCommit 0.2;
+		} forEach [15000,15001];
+	} else {
+		{
+			_control = _display displayCtrl _x;
+			if !(ctrlShown _control) exitWith {};
+			_control ctrlSetFade 1;
+			_control ctrlCommit 0.2;
+		} forEach [15000,15001];
+
+		{
+			_control = _display displayCtrl _x;
+			waitUntil {ctrlCommitted _control};
+			_control ctrlShow false;
+			_control ctrlSetFade 0;
+			_control ctrlCommit 0;
+		} forEach [15000,15001];
+	};
+};
+
 swt_markers_adv_set_butt = {
 	private ["_display"];
 	disableSerialization;
