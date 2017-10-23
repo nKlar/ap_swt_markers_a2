@@ -226,14 +226,6 @@
 				Скрыть инфо
 				</Russian>
 			</Key>
-			<Key ID="STR_SWT_M_SHOWINFO">
-				<English>
-				Show info
-				</English>
-				<Russian>
-				Показать инфо
-				</Russian>
-			</Key>
 			<Key ID="STR_SWT_M_MARKINFO">
 				<English>
 				Show marker info

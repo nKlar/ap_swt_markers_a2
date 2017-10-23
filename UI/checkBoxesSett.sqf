@@ -1,3 +1,4 @@
+#define	cbSetChecked(a) ctrlSetText(if(a)then{"\swt_markers\data\CheckBox_checked_ca.paa"}else{"\swt_markers\data\CheckBox_unchecked_ca.paa"})
 disableSerialization;
 _ctrl = ((_this select 0) select 0);
 _display = ctrlParent _ctrl;
@@ -30,6 +31,7 @@ switch (_this select 1) do {
 		_combo_icon = [2106,2107,2108,2109,2110,2111];
 
 		swt_markers_show_butt = !(swt_markers_show_butt);
+		(_ctrl) cbSetChecked(swt_markers_show_butt);
 		swt_marker_settings_params set [0,swt_markers_show_butt];
 		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
@@ -63,6 +65,7 @@ switch (_this select 1) do {
 
     case 'SHOW ICON': {
 		swt_markers_show_icon = !(swt_markers_show_icon);
+		(_ctrl) cbSetChecked(swt_markers_show_icon);
 		swt_marker_settings_params set [1,swt_markers_show_icon];
 		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
@@ -92,6 +95,7 @@ switch (_this select 1) do {
 
      case 'SHOW COLOR': {
 		swt_markers_show_color = !(swt_markers_show_color);
+		(_ctrl) cbSetChecked(swt_markers_show_color);
 		swt_marker_settings_params set [2,swt_markers_show_color];
 		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
@@ -121,6 +125,7 @@ switch (_this select 1) do {
 
     case 'SHOW LB': {
     	swt_markers_show_lb = !(swt_markers_show_lb);
+    	(_ctrl) cbSetChecked(swt_markers_show_lb);
 		swt_marker_settings_params set [3,swt_markers_show_lb];
 		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
@@ -153,6 +158,7 @@ switch (_this select 1) do {
 
     case 'FAST LOAD': {
     	swt_markers_save_mode = !swt_markers_save_mode;
+    	(_ctrl) cbSetChecked(swt_markers_save_mode);
     	swt_marker_settings_params set [4,swt_markers_save_mode];
 		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
@@ -160,40 +166,15 @@ switch (_this select 1) do {
 
 	case 'SAVE TEXT': {
 		swt_markers_save_text = !(swt_markers_save_text);
+		(_ctrl) cbSetChecked(swt_markers_save_text);
     	swt_marker_settings_params set [5,swt_markers_save_text];
 		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
 	};
 
-	case 'SHOW INFO': {
-		swt_markers_show_info = !(swt_markers_show_info);
-    	swt_marker_settings_params set [6,swt_markers_show_info];
-		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
-		saveProfileNamespace;
-		if (!isnil "RscDisplayInsertMarker_info") then {
-			((findDisplay 54) displayctrl 2400) call swt_markers_infoAnim;
-			uiSleep 0.25;
-		};
-
-		waitUntil {ctrlCommitted (_display displayCtrl 1)};
-		_butt_cor_pos = -1.1*(1 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25));
-
-
-		if (swt_markers_show_info) then {_butt_cor_pos = 1.1*(1 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25))};
-		{
-			_control = (_display displayCtrl _x);
-			_pos_control = (ctrlPosition _control);
-			_control ctrlSetPosition [_pos_control select 0, (_pos_control select 1)+_butt_cor_pos, _pos_control select 2, _pos_control select 3];
-			_control ctrlCommit 0.2;
-		} forEach (_combo_color+_combo_icon+[1104,228,1,2]);
-
-		_pos = ctrlPosition (_display displayCtrl 2400);
-		(_display displayCtrl 2400) ctrlSetPosition [_pos select 0,_pos select 1,_pos select 2, if (swt_markers_show_info) then {1 * 			(			(			((safezoneW / safezoneH) min 1.2) / 1.2) / 25)} else {0}];
-		(_display displayCtrl 2400) ctrlCommit 0.2;
-	};
-
 	case 'SHOW BACK': {
 		swt_markers_show_back = !(swt_markers_show_back);
+		(_ctrl) cbSetChecked(swt_markers_show_back);
     	swt_marker_settings_params set [7,swt_markers_show_back];
 		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
@@ -212,6 +193,7 @@ switch (_this select 1) do {
 
 	case 'SAVE MARK': {
 		swt_markers_save_mark = !(swt_markers_save_mark);
+		(_ctrl) cbSetChecked(swt_markers_save_mark);
     	swt_marker_settings_params set [8,swt_markers_save_mark];
 		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
@@ -219,6 +201,7 @@ switch (_this select 1) do {
 
 	case 'LOG': {
 		swt_markers_logging = !(swt_markers_logging);
+		(_ctrl) cbSetChecked(swt_markers_logging);
     	swt_marker_settings_params set [10,swt_markers_logging];
 		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
@@ -226,6 +209,7 @@ switch (_this select 1) do {
 
 	case 'MARK INFO': {
 		swt_markers_mark_info = !(swt_markers_mark_info);
+		(_ctrl) cbSetChecked(swt_markers_mark_info);
     	swt_marker_settings_params set [11,swt_markers_mark_info];
 		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
 		saveProfileNamespace;
