@@ -126,7 +126,7 @@ swt_markers_logicClient_load = {
 	["LOAD", [name _player, count (_this select 1)]] call swt_markers_log;
 };
 
-nk_swt_markers_parse_frequency = {
+_nk_swt_markers_parse_frequency = {
 	private["_text", "_array", "_min", "_max", "_title", "_frequencies", "_shifts", "_arrayDouble", "_i", "_titleReady", "_prefix", "_Sender"];
 	_text = _this select 0;
 	_array = toArray _text;
@@ -234,7 +234,7 @@ nk_swt_markers_parse_frequency = {
 	_parsed;
 };
 
-nk_swt_markers_parse_squad = {
+_nk_swt_markers_parse_squad = {
 	_name = name (_this select 0);
 	_array = toArray(_name);
 	_srch = _array find 93;
@@ -245,6 +245,41 @@ nk_swt_markers_parse_squad = {
 	};
 
 	(toString _array);
+};
+
+canSync = true;
+
+swt_markers_resync_markers = {
+	if (canSync) then
+	{
+		canSync = false;
+		{
+			deleteMarkerLocal _x;
+		} forEach swt_markers_allMarkers;
+		swt_markers_allMarkers = [];
+		swt_markers_allMarkers_params = [];
+		swt_markers_sys_req_markers = player;
+		publicVariableServer "swt_markers_sys_req_markers";
+		[] spawn
+		{
+			disableSerialization;
+			_timer = 20;
+			while {_timer > 0} do
+			{
+				_ctrl = ((findDisplay 54) displayCtrl 349);
+				_ctrl ctrlSetText ((localize "STR_SWT_M_RESYNC") + " (" + str _timer + ")");
+				_ctrl ctrlSetBackgroundColor [0.259,0.286,0.286,1];
+				_timer = _timer - 1;
+				diag_log _timer;
+				uiSleep 1;
+				diag_log "sleep";
+			};
+			_ctrl = ((findDisplay 54) displayCtrl 349);
+			_ctrl ctrlSetText (localize "STR_SWT_M_RESYNC");
+			_ctrl ctrlSetBackgroundColor [0.95700002,0,0,0.80000001];
+			canSync = true;
+		};
+	};
 };
 
 [] spawn {

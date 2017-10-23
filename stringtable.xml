@@ -575,6 +575,14 @@
 				&lt;font color='#ABB78D'&gt;%1&lt;/font&gt;
 				</Russian>
 			</Key>
+			<Key ID="STR_SWT_M_RESYNC">
+				<English>
+				Resynchronization
+				</English>
+				<Russian>
+				Ресинхронизация
+				</Russian>
+			</Key>
 		</Container>
 	</Package>
 </Project>
