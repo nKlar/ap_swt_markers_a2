@@ -31,19 +31,19 @@ class Extended_PreInit_EventHandlers
 };
 class CfgMarkers
 {
-	class nm_kv
+	class swt_kv
 	{
 		scope=2;
-		name="$STR_NM_KV";
-		icon="\swt_markers\data\nm_kv_ca.paa";
+		name="$STR_SWT_M_KV";
+		icon="\swt_markers\data\marker_kv_ca.paa";
 		color[]={1,0,0,1};
 		size=29;
 		shadow=1;
 	};
-	class nm_dv: nm_kv
+	class swt_dv: swt_kv
 	{
-		name="$STR_NM_DV";
-		icon="\swt_markers\data\nm_dv_ca.paa";
+		name="$STR_SWT_M_DV";
+		icon="\swt_markers\data\marker_dv_ca.paa";
 	};
 };
 class RscListBox;
@@ -909,7 +909,7 @@ class RscDisplayInsertMarker
 					y="0 * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					text="$STR_SWT_M_SHOW_BUTTONS";
 					w="(9.7) * (((safezoneW/safezoneH) min 1.2)/40)";
-					h="(3.5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					h="(2.5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					SizeEx="0.8 * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class cb_show_butt: swt_RscCheckBox
@@ -927,126 +927,138 @@ class RscDisplayInsertMarker
 				class Second_block: first_block
 				{
 					x="0.15 * (((safezoneW/safezoneH) min 1.2)/40)";
-					y="(3.5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="(2.5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					text="$STR_SWT_M_CHOOSE";
 					h="(4.5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class cb_show_icon: swt_RscCheckBox
 				{
 					idc=231;
-					y="(3.5*0.9+0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="(2.5*0.9+0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					onButtonClick="[_this,'SHOW ICON'] spawn swt_markers_cb_butt";
 				};
 				class text_show_icon: swt_RscStructuredText_sett
 				{
 					idc=232;
 					text="$STR_SWT_M_ICONS";
-					y="(3.5*0.9+0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="(2.5*0.9+0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class cb_show_color: swt_RscCheckBox
 				{
 					idc=233;
-					y="(3.5*0.9+2*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="(2.5*0.9+2*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					onButtonClick="[_this,'SHOW COLOR'] spawn swt_markers_cb_butt";
 				};
 				class text_show_color: swt_RscStructuredText_sett
 				{
 					idc=234;
 					text="$STR_SWT_M_COLORS";
-					y="(3.5*0.9+2*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="(2.5*0.9+2*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class cb_show_lb: swt_RscCheckBox
 				{
 					idc=235;
-					y="(3.5*0.9+3*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="(2.5*0.9+3*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					onButtonClick="[_this,'SHOW LB'] spawn swt_markers_cb_butt";
 				};
 				class text_show_lb: swt_RscStructuredText_sett
 				{
 					idc=236;
 					text="$STR_SWT_M_ADVL";
-					y="(3.5*0.9+3*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="(2.5*0.9+3*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class third_block: first_block
 				{
 					style="64 + 2";
 					x="0.15 * (((safezoneW/safezoneH) min 1.2)/40)";
-					y="((3.5*0.9)+(4.5*0.9)) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9)) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					text="$STR_SWT_M_F";
-					h="(7.5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					h="(8.5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					SizeEx="0.8 * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class cb_save_text: swt_RscCheckBox
 				{
 					idc=237;
-					y="((3.5*0.9)+(4.5*0.9) + 0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9) + 0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					onButtonClick="[_this,'SAVE TEXT'] spawn swt_markers_cb_butt";
 				};
 				class text_save_text: swt_RscStructuredText_sett
 				{
 					idc=238;
 					text="$STR_SWT_M_SAVET";
-					y="((3.5*0.9)+(4.5*0.9) + 0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9) + 0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class cb_save_mark: swt_RscCheckBox
 				{
 					idc=245;
-					y="((3.5*0.9)+(4.5*0.9) + 2*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9) + 2*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					onButtonClick="[_this,'SAVE MARK'] spawn swt_markers_cb_butt";
 				};
 				class text_save_mark: swt_RscStructuredText_sett
 				{
 					idc=246;
 					text="$STR_SWT_M_SAVEM";
-					y="((3.5*0.9)+(4.5*0.9) + 2*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9) + 2*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class cb_fast_load: swt_RscCheckBox
 				{
 					idc=239;
-					y="((3.5*0.9)+(4.5*0.9)+3*0.9)* ((((safezoneW/safezoneH) min 1.2) / 1.2) / 25)";
+					y="((2.5*0.9)+(4.5*0.9)+3*0.9)* ((((safezoneW/safezoneH) min 1.2) / 1.2) / 25)";
 					onButtonClick="[_this,'FAST LOAD'] spawn swt_markers_cb_butt";
 				};
 				class text_fast_load: swt_RscStructuredText_sett
 				{
 					idc=240;
 					text="$STR_SWT_M_FASTL";
-					y="((3.5*0.9)+(4.5*0.9)+3*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9)+3*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class cb_show_back: swt_RscCheckBox
 				{
 					idc=243;
-					y="((3.5*0.9)+(4.5*0.9) + 4*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9) + 4*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					onButtonClick="[_this,'SHOW BACK'] spawn swt_markers_cb_butt";
 				};
 				class text_show_back: swt_RscStructuredText_sett
 				{
 					idc=244;
 					text="$STR_SWT_M_BACKGROUND";
-					y="((3.5*0.9)+(4.5*0.9) + 4*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9) + 4*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class cb_log: swt_RscCheckBox
 				{
 					idc=247;
-					y="((3.5*0.9)+(4.5*0.9) + 5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9) + 5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					onButtonClick="[_this,'LOG'] spawn swt_markers_cb_butt";
 				};
 				class text_log: swt_RscStructuredText_sett
 				{
 					idc=248;
 					text="$STR_SWT_M_LOG";
-					y="((3.5*0.9)+(4.5*0.9) + 5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9) + 5*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class cb_markinfo: swt_RscCheckBox
 				{
 					idc=249;
-					y="((3.5*0.9)+(4.5*0.9) + 6*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9) + 6*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 					onButtonClick="[_this,'MARK INFO'] spawn swt_markers_cb_butt";
 				};
 				class text_markimfo: swt_RscStructuredText_sett
 				{
 					idc=250;
 					text="$STR_SWT_M_MARKINFO";
-					y="((3.5*0.9)+(4.5*0.9) + 6*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					y="((2.5*0.9)+(4.5*0.9) + 6*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+				};
+				class cb_marknewmark: swt_RscCheckBox
+				{
+					idc=252;
+					y="((2.5*0.9)+(4.5*0.9) + 7*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					onButtonClick="[_this,'MARK MARK'] spawn swt_markers_cb_butt";
+				};
+				class text_marknewmark: swt_RscStructuredText_sett
+				{
+					idc=253;
+					text="$STR_SWT_M_MARKNEWMARK";
+					y="((2.5*0.9)+(4.5*0.9) + 7*0.9) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
 				};
 				class swt_text_saved: first_block
 				{

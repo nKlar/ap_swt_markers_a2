@@ -26,6 +26,7 @@ swt_markers_ctrlState =   false;
 swt_markers_altState =    false;
 swt_markers_channel = localize "str_channel_group";
 swt_markers_delayCoeff = 25;
+swt_markers_defSettings = [true,true,true,true,true,false,false,true,true,"",true,true,false];
 
 if (isNil "swt_markers_pos_m") then {swt_markers_pos_m = [0,0]};
 
@@ -413,6 +414,7 @@ swt_markers_adv_set_butt = {
 		(_display displayCtrl 245) cbSetChecked(swt_markers_save_mark);
 		(_display displayCtrl 247) cbSetChecked(swt_markers_logging);
 		(_display displayCtrl 249) cbSetChecked(swt_markers_mark_info);
+		(_display displayCtrl 252) cbSetChecked(swt_markers_mark_new_mark);
 		(_display displayCtrl 451) ctrlSetText swt_markers_fast_text_T_saved;
 		(_display displayCtrl 1104) ctrlShow true;
 		(_display displayCtrl 1104) ctrlSetFade 0;
@@ -492,21 +494,27 @@ swt_markers_lb_sel_adv = {
 
 swt_markers_profileNil = {
 	_version = 2;
-	if (isNil {profileNamespace getVariable "ap_swt_markers_params_version"}) then {
-		profileNamespace setVariable ["ap_swt_markers_params_version", _version];
-		saveProfileNamespace;
-		call swt_def;
-	};
-	if ((profileNamespace getVariable "ap_swt_markers_params_version") != _version) exitWith {
-		systemChat (localize "STR_SWT_M_MESS_OLD");
-		profileNamespace setVariable ["ap_swt_markers_params_version", _version];
-		saveProfileNamespace;
+	if (isNil {profileNamespace getVariable "swt_marker_settings_params"}) then {
 		call swt_def;
 	};
 
 	swt_marker_color_slot_params = [] + (call compile (str (profileNamespace getVariable "ap_swt_marker_color_slot_params")));
 	swt_marker_icon_slot_params = [] + (call compile (str (profileNamespace getVariable "ap_swt_marker_icon_slot_params")));
 	swt_marker_settings_params = [] + (call compile (str (profileNamespace getVariable "ap_swt_marker_settings_params")));
+
+	//Patch
+	_paramsCount = count swt_marker_settings_params;
+	_defParamsCount = count swt_markers_defSettings;
+	if(_paramsCount < _defParamsCount) then
+	{
+		for "_i" from _paramsCount to (_defParamsCount-1) step 1 do
+		{
+			swt_marker_settings_params set [_i, swt_markers_defSettings select _i];
+		};
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
+		saveProfileNamespace;
+	};
+
 	swt_markers_show_butt = swt_marker_settings_params select 0;
 	swt_markers_show_icon = swt_marker_settings_params select 1;
 	swt_markers_show_color = swt_marker_settings_params select 2;
@@ -519,6 +527,7 @@ swt_markers_profileNil = {
 	swt_markers_fast_text_T_saved = swt_marker_settings_params select 9;
 	swt_markers_logging = swt_marker_settings_params select 10;
 	swt_markers_mark_info = swt_marker_settings_params select 11;
+	swt_markers_mark_new_mark = swt_marker_settings_params select 12;
 
 	swt_cfgMarkerColors = [];
 	_cfg = (configfile >> "CfgMarkerColors");
@@ -571,9 +580,9 @@ swt_markers_profileNil = {
 swt_def = {
 	systemChat (localize "STR_SWT_M_MESS_DEF");
 	profileNamespace setVariable ["ap_swt_marker_color_slot_params", ["ColorBlue","ColorRed","ColorGreen","ColorBlack","ColorWhite","ColorOrange"]];
-	profileNamespace setVariable ["ap_swt_marker_icon_slot_params", ["tu_dot","tu_o_inf","tu_o_armor","nm_o_air","hd_pickup","nm_kv"]];
+	profileNamespace setVariable ["ap_swt_marker_icon_slot_params", ["tu_dot","tu_o_inf","tu_o_armor","nm_o_air","hd_pickup","swt_kv"]];
 //	profileNamespace setVariable ["ap_swt_marker_settings_params", [false,true,true,false,true,false,false,true,true,"",true, true]];
-	profileNamespace setVariable ["ap_swt_marker_settings_params", [true,true,true,true,true,false,false,true,true,"",true, true]];
+	profileNamespace setVariable ["ap_swt_marker_settings_params", swt_markers_defSettings];
 	saveProfileNamespace;
 	call swt_markers_profileNil;
 };

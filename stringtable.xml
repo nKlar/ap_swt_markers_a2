@@ -234,6 +234,14 @@
 				Информация о маркере
 				</Russian>
 			</Key>
+			<Key ID="STR_SWT_M_MARKNEWMARK">
+				<English>
+				Mark new markers
+				</English>
+				<Russian>
+				Пометить нов. маркера
+				</Russian>
+			</Key>
 			<Key ID="STR_SWT_RNF">
 				<English>
 				SWT Markers: Road not found.
@@ -495,7 +503,7 @@
 				&lt;br/&gt;Переработали для ArmaProject.Ru: &lt;font color='#FFFF00'&gt;Noma&lt;/font&gt;, &lt;font color='#FFFF00'&gt;nKlar&lt;/font&gt;.
 				</Russian>
 			</Key>
-			<Key ID="STR_NM_KV">
+			<Key ID="STR_SWT_M_KV">
 				<English>
 				SW Radio
 				</English>
@@ -503,7 +511,7 @@
 				КВ рация
 				</Russian>
 			</Key>
-			<Key ID="STR_NM_DV">
+			<Key ID="STR_SWT_M_DV">
 				<English>
 				LR Radio
 				</English>
@@ -511,15 +519,7 @@
 				ДВ рация
 				</Russian>
 			</Key>
-			<Key ID="STR_NK_FREQ">
-				<English>
-				Frequencies
-				</English>
-				<Russian>
-				Частоты
-				</Russian>
-			</Key>
-			<Key ID="STR_NK_KV">
+			<Key ID="STR_SWT_DS_KV">
 				<English>
 				SW freq.
 				</English>
@@ -527,7 +527,7 @@
 				Частоты КВ
 				</Russian>
 			</Key>
-			<Key ID="STR_NK_DV">
+			<Key ID="STR_SWT_DS_DV">
 				<English>
 				LR freq.
 				</English>
@@ -535,7 +535,15 @@
 				Частоты ДВ
 				</Russian>
 			</Key>
-			<Key ID="STR_NK_FQ_MAIN">
+			<Key ID="STR_SWT_DE_FREQ">
+				<English>
+				Frequencies
+				</English>
+				<Russian>
+				Частоты
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_FQ_MAIN">
 				<English>
 				&lt;font size=14 color='#FFFFFF'&gt; Frequency: &lt;/font&gt;&lt;font size=12 color='#FFFF00'&gt;%1&lt;/font&gt;
 				</English>
@@ -543,7 +551,7 @@
 				&lt;font size=14 color='#FFFFFF'&gt; Частота: &lt;/font&gt;&lt;font size=12 color='#FFFF00'&gt;%1&lt;/font&gt;
 				</Russian>
 			</Key>
-			<Key ID="STR_NK_FQ_N">
+			<Key ID="STR_SWT_FQ_N">
 				<English>
 				&lt;font size=13 color='#FFFFFF'&gt;  %1 reserve: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
 				</English>
@@ -551,7 +559,7 @@
 				&lt;font size=13 color='#FFFFFF'&gt;  %1 резерв: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
 				</Russian>
 			</Key>
-			<Key ID="STR_NK_FQ_ST">
+			<Key ID="STR_SWT_FQ_ST">
 				<English>
 				&lt;font size=13 color='#FFFFFF'&gt;  %1 shift: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
 				</English>
@@ -559,7 +567,7 @@
 				&lt;font size=13 color='#FFFFFF'&gt;  %1 сдвиг: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
 				</Russian>
 			</Key>
-			<Key ID="STR_NK_MY_GRP">
+			<Key ID="STR_SWT_MY_GRP">
 				<English>
 				&lt;font color='#556B2F'&gt;%1&lt;/font&gt;
 				</English>
@@ -567,7 +575,7 @@
 				&lt;font color='#556B2F'&gt;%1&lt;/font&gt;
 				</Russian>
 			</Key>
-			<Key ID="STR_NK_MY_SQD">
+			<Key ID="STR_SWT_MY_SQD">
 				<English>
 				&lt;font color='#ABB78D'&gt;%1&lt;/font&gt;
 				</English>

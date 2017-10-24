@@ -7,7 +7,7 @@ swt_markers_getChannel = {
 
 swt_markers_createMarker = {
 	private ["_mark","_params"];
-	_params = _this;
+	_params = _this select 0;
 	_mark = _params select 0;
 	_Chan  = _params select 1;
 	_Text  = _params select 2;
@@ -17,7 +17,7 @@ swt_markers_createMarker = {
 	_Dir   = _params select 6;
 	_Scale = _params select 7;
 	_Name  = _params select 8;
-	_Sender = _params select 10; //ADDED BY NKLAR
+	_Sender = _params select 10;
 
 	swt_markers_allMarkers set [count swt_markers_allMarkers,_mark];
 	swt_markers_allMarkers_params set [count swt_markers_allMarkers_params, _params];
@@ -41,24 +41,37 @@ swt_markers_createMarker = {
 			_mark setMarkerTypeLocal _typeName;
 			_mark setMarkerTextLocal _Text;
 			_mark setMarkerSizeLocal [_Scale,_Scale];
+
+			if(swt_markers_mark_new_mark && (_this select 1)) then
+			{
+				_mark spawn
+				{
+					for "_i" from 1 to 10 step 1 do
+					{
+						_this setMarkerAlphaLocal ([1, 0.5] select (_i%2));
+						uisleep 1;
+					};
+				};
+			};
+
 			switch (_typeName) do
 			{
-				case "nm_dv":
+				case "swt_dv":
 				{
-					if !(player diarySubjectExists "NK_DV") then
+					if !(player diarySubjectExists "SWT_DV") then
 					{
-						player createDiarySubject ["NK_DV", localize "STR_NK_DV"];
+						player createDiarySubject ["SWT_DV", localize "STR_SWT_DS_DV"];
 					};
-					player createDiaryRecord ["NK_DV", [localize "STR_NK_FREQ", ([_Text, 1, 25, _Sender] call nk_swt_markers_parse_frequency)]];
+					player createDiaryRecord ["SWT_DV", [localize "STR_SWT_DE_FREQ", ([_Text, 1, 25, _Sender] call swt_markers_parse_frequency)]];
 				};
 
-				case "nm_kv":
+				case "swt_kv":
 				{
-					if !(player diarySubjectExists "NK_KV") then
+					if !(player diarySubjectExists "SWT_KV") then
 					{
-						player createDiarySubject ["NK_KV", localize "STR_NK_KV"];
+						player createDiarySubject ["SWT_KV", localize "STR_SWT_DS_KV"];
 					};
-					player createDiaryRecord ["NK_KV", [localize "STR_NK_FREQ", ([_Text, 30, 512, _Sender] call nk_swt_markers_parse_frequency)]];
+					player createDiaryRecord ["SWT_KV", [localize "STR_SWT_DE_FREQ", ([_Text, 30, 512, _Sender] call swt_markers_parse_frequency)]];
 				};
 			};
 		};
@@ -68,7 +81,7 @@ swt_markers_createMarker = {
 swt_markers_sys_sendMark = compile preprocessFileLineNumbers '\swt_markers\Logic\sendMark.sqf';
 
 swt_markers_logicClient_create = {
-	_this call swt_markers_createMarker;
+	[_this, true] call swt_markers_createMarker;
 	["CREATE", _this] call swt_markers_log;
 };
 
@@ -121,13 +134,13 @@ swt_markers_logicClient_load = {
 	_player = _this select 0;
 
 	{
-		_x call swt_markers_createMarker;
+		[_x, false] call swt_markers_createMarker;
 	} forEach (_this select 1);
 	["LOAD", [name _player, count (_this select 1)]] call swt_markers_log;
 };
 
-_nk_swt_markers_parse_frequency = {
-	private["_text", "_array", "_min", "_max", "_title", "_frequencies", "_shifts", "_arrayDouble", "_i", "_titleReady", "_prefix", "_Sender"];
+swt_markers_parse_frequency = {
+	private["_text", "_array", "_min", "_max", "_title", "_frequencies", "_shifts", "_arrayDouble", "_i", "_titleReady", "_prefix", "_Sender", "_swt_markers_parse_squad"];
 	_text = _this select 0;
 	_array = toArray _text;
 	_array = _array - [60,62];
@@ -142,6 +155,19 @@ _nk_swt_markers_parse_frequency = {
 	_i = 0;
 	_titleReady = false;
 	_prefix = -1;
+
+	_swt_markers_parse_squad = {
+		_name = name (_this select 0);
+		_array = toArray(_name);
+		_srch = _array find 93;
+		if(_srch != -1) then
+		{
+			_array resize (_srch);
+			_array = _array - [91];
+		};
+
+		(toString _array);
+	};
 
 	while{(_i < (count _array))} do
 	{
@@ -205,12 +231,12 @@ _nk_swt_markers_parse_frequency = {
 	{
 		case ((group _Sender) == (group player)):
 		{
-			_parsed = format[localize "STR_NK_MY_GRP", _parsed];
+			_parsed = format[localize "STR_SWT_MY_GRP", _parsed];
 		};
 
-		case (([_Sender] call nk_swt_markers_parse_squad) == ([player] call nk_swt_markers_parse_squad)):
+		case (([_Sender] call _swt_markers_parse_squad) == ([player] call _swt_markers_parse_squad)):
 		{
-			_parsed = format[localize "STR_NK_MY_SQD", _parsed];
+			_parsed = format[localize "STR_SWT_MY_SQD", _parsed];
 		};
 	};
 
@@ -218,33 +244,20 @@ _nk_swt_markers_parse_frequency = {
 
 	if((count _frequencies) > 0) then
 	{
-		_parsed = _parsed + format[(localize "STR_NK_FQ_MAIN"), _frequencies select 0] + '<br/>';
+		_parsed = _parsed + format[(localize "STR_SWT_FQ_MAIN"), _frequencies select 0] + '<br/>';
 		for [{_i=1},{_i<(count _frequencies)},{_i=_i+1}] do
 		{
-			_parsed = _parsed + format[(localize "STR_NK_FQ_N"), _i, _frequencies select _i] + '<br/>';
+			_parsed = _parsed + format[(localize "STR_SWT_FQ_N"), _i, _frequencies select _i] + '<br/>';
 		};
 	};
 	if((count _shifts) > 0) then
 	{
 		for [{_i=0},{_i<(count _shifts)},{_i=_i+1}] do
 		{
-			_parsed = _parsed + format[(localize "STR_NK_FQ_ST"), _i+1, _shifts select _i] + '<br/>';
+			_parsed = _parsed + format[(localize "STR_SWT_FQ_ST"), _i+1, _shifts select _i] + '<br/>';
 		};
 	};
 	_parsed;
-};
-
-_nk_swt_markers_parse_squad = {
-	_name = name (_this select 0);
-	_array = toArray(_name);
-	_srch = _array find 93;
-	if(_srch != -1) then
-	{
-		_array resize (_srch);
-		_array = _array - [91];
-	};
-
-	(toString _array);
 };
 
 canSync = true;
@@ -270,9 +283,7 @@ swt_markers_resync_markers = {
 				_ctrl ctrlSetText ((localize "STR_SWT_M_RESYNC") + " (" + str _timer + ")");
 				_ctrl ctrlSetBackgroundColor [0.259,0.286,0.286,1];
 				_timer = _timer - 1;
-				diag_log _timer;
 				uiSleep 1;
-				diag_log "sleep";
 			};
 			_ctrl = ((findDisplay 54) displayCtrl 349);
 			_ctrl ctrlSetText (localize "STR_SWT_M_RESYNC");
@@ -298,7 +309,7 @@ swt_markers_resync_markers = {
 	"swt_markers_send_JIP" addPublicVariableEventHandler {
 		_markers = _this select 1;
 		{
-			_x call swt_markers_createMarker;
+			[_x, false] call swt_markers_createMarker;
 		} forEach (_markers);
 	};
 

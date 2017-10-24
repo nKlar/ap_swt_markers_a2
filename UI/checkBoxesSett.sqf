@@ -216,4 +216,14 @@ switch (_this select 1) do {
 		_displayMap = ({if !(isNull(findDisplay _x)) exitWith {findDisplay _x}} forEach [37,52,53,12]);
 		(_displayMap displayCtrl 228) ctrlShow false;
 	};
+
+	case 'MARK MARK': {
+		swt_markers_mark_new_mark = !(swt_markers_mark_new_mark);
+		(_ctrl) cbSetChecked(swt_markers_mark_new_mark);
+    	swt_marker_settings_params set [12,swt_markers_mark_new_mark];
+		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
+		saveProfileNamespace;
+		_displayMap = ({if !(isNull(findDisplay _x)) exitWith {findDisplay _x}} forEach [37,52,53,12]);
+		(_displayMap displayCtrl 228) ctrlShow false;
+	};
 };
