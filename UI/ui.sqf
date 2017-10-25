@@ -249,7 +249,7 @@ swt_markers_showInfo = {
 	_find = false;
 
 	_mark = ctrlMapMouseOver (_display displayCtrl 51);
-    _mark = if(count _mark > 1) then {_mark select 1};
+    _mark = if(count _mark > 1 && (_marker select 0) == "marker") then {_mark select 1};
 	_pos = getMarkerPos _mark;
 	_pos = (_this select 0) ctrlMapWorldToScreen _pos;
     _index = swt_markers_allMarkers find _mark;

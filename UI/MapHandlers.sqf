@@ -64,7 +64,7 @@ swt_markers_MapMouseDown = {
     	case (!_shift and !_ctrlKey and _alt and ((_this select 1) == 0)): //Alt + LeftMouse
     	{
     		_marker = ctrlMapMouseOver _ctrl;
-    		_marker = if(count _marker > 1) then {_marker select 1};
+    		_marker = if(count _marker > 1 && (_marker select 0) == "marker") then {_marker select 1};
     		_index = swt_markers_allMarkers find _marker;
     		if(_index  >= 0) exitWith
     		{
@@ -118,7 +118,7 @@ swt_markers_MapMouseDown = {
     	case ((_this select 1) == 0): //LeftMouse
     	{
 			_marker = ctrlMapMouseOver _ctrl;
-    		_marker = if(count _marker > 1) then {_marker select 1};
+    		_marker = if(count _marker > 1 && (_marker select 0) == "marker") then {_marker select 1};
     		_index = swt_markers_allMarkers find _marker;
 			if (_index >= 0) exitWith {
 				if (name player == ((swt_markers_allMarkers_params select _index) select 8)) then {
@@ -230,7 +230,7 @@ swt_markers_MapKeyDown = {
 	} else {
 	    if (_dikCode == 211) then { //DEL
 			_marker = ctrlMapMouseOver (_display displayCtrl 51);
-	    	_marker = if(count _marker > 1) then {_marker select 1};
+	    	_marker = if(count _marker > 1 && (_marker select 0) == "marker") then {_marker select 1};
 	    	_index = swt_markers_allMarkers find _marker;
 			if (_index >= 0) exitWith {
 				swt_markers_sys_change_mark = ["DEL", player, _marker, _marker call swt_markers_getChannel];
