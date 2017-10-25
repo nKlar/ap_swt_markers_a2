@@ -503,22 +503,6 @@
 				&lt;br/&gt;Переработали для ArmaProject.Ru: &lt;font color='#FFFF00'&gt;Noma&lt;/font&gt;, &lt;font color='#FFFF00'&gt;nKlar&lt;/font&gt;.
 				</Russian>
 			</Key>
-			<Key ID="STR_SWT_M_KV">
-				<English>
-				SW Radio
-				</English>
-				<Russian>
-				КВ рация
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_M_DV">
-				<English>
-				LR Radio
-				</English>
-				<Russian>
-				ДВ рация
-				</Russian>
-			</Key>
 			<Key ID="STR_SWT_DS_KV">
 				<English>
 				SW freq.
@@ -589,6 +573,22 @@
 				</English>
 				<Russian>
 				Ресинхронизация
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_KV">
+				<English>
+				SW Radio
+				</English>
+				<Russian>
+				КВ рация
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_DV">
+				<English>
+				LR Radio
+				</English>
+				<Russian>
+				ДВ рация
 				</Russian>
 			</Key>
 		</Container>

@@ -9,6 +9,13 @@
 #define GR_H ((((safezoneW/safezoneH) min 1.2)/1.2)/25)
 #define	cbSetChecked(a) ctrlSetText(if(a)then{"\swt_markers\data\CheckBox_checked_ca.paa"}else{"\swt_markers\data\CheckBox_unchecked_ca.paa"})
 
+#define swt_markers_scope 0
+#define swt_markers_version 3
+#define swt_markers_def_color_slot_params ["ColorBlue","ColorRed","ColorGreen","ColorBlack","ColorWhite","ColorOrange"]
+#define swt_markers_def_icon_slot_params ["mil_dot","o_inf","o_armor","hd_pickup","hd_warning","hd_unknown"]
+#define swt_markers_def_settings_params [true,true,true,true,true,false,false,true,true,"",true,true,false]
+
+
 swt_markers_disable = false;
 swt_markers_load_enabled = true;
 swt_markers_load_enabled_for = true;
@@ -26,7 +33,7 @@ swt_markers_ctrlState =   false;
 swt_markers_altState =    false;
 swt_markers_channel = localize "str_channel_group";
 swt_markers_delayCoeff = 25;
-swt_markers_defSettings = [true,true,true,true,true,false,false,true,true,"",true,true,false];
+
 
 if (isNil "swt_markers_pos_m") then {swt_markers_pos_m = [0,0]};
 
@@ -493,27 +500,23 @@ swt_markers_lb_sel_adv = {
 
 
 swt_markers_profileNil = {
-	_version = 2;
-	if (isNil {profileNamespace getVariable "ap_swt_marker_settings_params"}) then {
+
+	if (isNil {profileNamespace getVariable "ap_swt_markers_params_version"}) then
+	{
 		call swt_def;
+	}
+	else
+	{
+		if ((profileNamespace getVariable "ap_swt_markers_params_version") != swt_markers_version) exitWith
+		{
+			systemChat (localize "STR_SWT_M_MESS_OLD");
+			call swt_def;
+		};
 	};
 
 	swt_marker_color_slot_params = [] + (call compile (str (profileNamespace getVariable "ap_swt_marker_color_slot_params")));
 	swt_marker_icon_slot_params = [] + (call compile (str (profileNamespace getVariable "ap_swt_marker_icon_slot_params")));
 	swt_marker_settings_params = [] + (call compile (str (profileNamespace getVariable "ap_swt_marker_settings_params")));
-
-	//Patch
-	_paramsCount = count swt_marker_settings_params;
-	_defParamsCount = count swt_markers_defSettings;
-	if(_paramsCount < _defParamsCount) then
-	{
-		for "_i" from _paramsCount to (_defParamsCount-1) step 1 do
-		{
-			swt_marker_settings_params set [_i, swt_markers_defSettings select _i];
-		};
-		profileNamespace setVariable ["ap_swt_marker_settings_params", swt_marker_settings_params];
-		saveProfileNamespace;
-	};
 
 	swt_markers_show_butt = swt_marker_settings_params select 0;
 	swt_markers_show_icon = swt_marker_settings_params select 1;
@@ -533,7 +536,7 @@ swt_markers_profileNil = {
 	_cfg = (configfile >> "CfgMarkerColors");
 	for "_i" from 0 to (count _cfg) - 1 do
 	{
-		if (getNumber (_cfg select _i >> 'scope') > 1) then
+		if (getNumber (_cfg select _i >> 'scope') > swt_markers_scope) then
 		{
 			swt_cfgMarkerColors set [count swt_cfgMarkerColors, _cfg select _i];
 		};
@@ -542,7 +545,7 @@ swt_markers_profileNil = {
 	_cfg = (configfile >> "CfgMarkers");
 	for "_i" from 0 to (count _cfg) - 1 do
 	{
-		if (getNumber (_cfg select _i >> 'scope') > 1) then
+		if (getNumber (_cfg select _i >> 'scope') > swt_markers_scope) then
 		{
 			swt_cfgMarkers set [count swt_cfgMarkers, _cfg select _i];
 		};
@@ -579,10 +582,10 @@ swt_markers_profileNil = {
 
 swt_def = {
 	systemChat (localize "STR_SWT_M_MESS_DEF");
-	profileNamespace setVariable ["ap_swt_marker_color_slot_params", ["ColorBlue","ColorRed","ColorGreen","ColorBlack","ColorWhite","ColorOrange"]];
-	profileNamespace setVariable ["ap_swt_marker_icon_slot_params", ["tu_dot","tu_o_inf","tu_o_armor","nm_o_air","hd_pickup","swt_kv"]];
-//	profileNamespace setVariable ["ap_swt_marker_settings_params", [false,true,true,false,true,false,false,true,true,"",true, true]];
-	profileNamespace setVariable ["ap_swt_marker_settings_params", swt_markers_defSettings];
+	profileNamespace setVariable ["ap_swt_markers_params_version", swt_markers_version];
+	profileNamespace setVariable ["ap_swt_marker_color_slot_params", swt_markers_def_color_slot_params];
+	profileNamespace setVariable ["ap_swt_marker_icon_slot_params", swt_markers_def_icon_slot_params];
+	profileNamespace setVariable ["ap_swt_marker_settings_params", swt_markers_def_settings_params];
 	saveProfileNamespace;
 	call swt_markers_profileNil;
 };
