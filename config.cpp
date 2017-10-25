@@ -8,7 +8,8 @@ class CfgPatches
 		requiredAddons[]=
 		{
 			"Extended_EventHandlers",
-			"CAUI"
+			"CAUI",
+			"tu_markers"
 		};
 		author[]=
 		{
@@ -28,7 +29,17 @@ class Extended_PreInit_EventHandlers
 	{
 		Init="execVM '\swt_markers\fn_init.sqf'";
 	};
+
+	delete c_persistent_markers; //Anti tu_markers
 };
+
+
+class Extended_PostInit_EventHandlers //Anti tu_markers
+{
+	delete c_persistent_markers;
+};
+
+
 class CfgMarkers
 {
 	class swt_kv
@@ -364,6 +375,7 @@ class swt_RscButton
 };
 class RscDisplayMainMap
 {
+	onKeyUp = ""; //Anti tu_markers
 	class controls
 	{
 		class swt_markers_infoCtrl: swt_RscStructuredText
