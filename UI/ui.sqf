@@ -494,7 +494,7 @@ swt_markers_lb_sel_adv = {
 
 swt_markers_profileNil = {
 	_version = 2;
-	if (isNil {profileNamespace getVariable "swt_marker_settings_params"}) then {
+	if (isNil {profileNamespace getVariable "ap_swt_marker_settings_params"}) then {
 		call swt_def;
 	};
 
