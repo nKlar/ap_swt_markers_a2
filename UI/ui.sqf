@@ -242,11 +242,29 @@ swt_markers_showInfo = {
 		format ["%1:%2:%3 (%4:%5:%6)",_hour call _addzero, _minute call _addzero, _second call _addzero, _hourN call _addzero, _minuteN call _addzero, _secondN call _addzero];
 	};
 
+	_getMarkerName = {
+		switch (_this) do
+		{
+			case -2:
+			{
+				localize "STR_SWT_M_LINE"
+			};
+			case -3:
+			{
+				localize "STR_SWT_M_ELLIPSE"
+			};
+			default
+			{
+				getText ((swt_cfgMarkers select _this) >> "name")
+			};
+		};
+	};
+
 	_ctrl_info = _display displayCtrl 228;
 	_find = false;
-
 	_mark = ctrlMapMouseOver (_display displayCtrl 51);
-    _mark = if(count _mark > 1 && (_marker select 0) == "marker") then {_mark select 1};
+    _mark = if(count _mark > 1 && (_mark select 0) == "marker") then {_mark select 1};
+
 	_pos = getMarkerPos _mark;
 	_pos = (_this select 0) ctrlMapWorldToScreen _pos;
     _index = swt_markers_allMarkers find _mark;
@@ -254,15 +272,24 @@ swt_markers_showInfo = {
 		_find = true;
 		if (swt_markers_hold) then {
 			_markParams = swt_markers_allMarkers_params select _index;
+			_Type = _markParams select 4;
+			_markerName = _Type call _getMarkerName;
 			_name = _markParams select 8;
 			_channel = _markParams select 1;
 			_channel = [_channel,"t"] call swt_markers_getColorChannel;
 			_time = _markParams select 9;
 			_colorname = [_name,"t"] call swt_markers_getColorName;
-			_Type = _markParams select 4;
-			_ctrl_info ctrlSetStructuredText parseText format ["<t size='0.8'>\
-			<t align='center' color='#F88379'>%1 ID: %2" + (if (!isNil {_markParams select 11}) then {localize "STR_SWT_M_INFOLOADED"} else {""}) + "</t><br/>" + (localize "STR_SWT_M_INFOWIN") + (_time call _getFormatedTime) + "</t>",
-			(if (_Type==-2) then {localize "STR_SWT_M_LINE"} else {if (_Type==-3) then {localize "STR_SWT_M_ELLIPSE"} else {localize "STR_SWT_M_MARKER"}}), _mark, _colorname, _channel];
+			_ctrl_info ctrlSetStructuredText parseText format [
+			"<t size='0.8'>\
+				<t align='center' color='#F88379'>%1</t>\
+					<br/>" +
+					(localize "STR_SWT_M_INFOWIN") + (_time call _getFormatedTime) +
+				"<br/>\
+			</t>\
+				<t align='right' color='#C0C0C0' size='0.7'>" +
+					_mark + (if (!isNil {_markParams select 11}) then {localize "STR_SWT_M_INFOLOADED"} else {""}) +
+				"</t>",
+			_markerName, "placeholder", _colorname, _channel];
 			_ctrl_pos = ctrlPosition _ctrl_info;
 			if ((markerText _mark) == "") then {
 				_ctrl_info ctrlSetPosition [(_pos select 0) - (0.05)/2 + 0.07, (_pos select 1) - (_ctrl_pos select 3)/2, _ctrl_pos select 2, _ctrl_pos select 3];

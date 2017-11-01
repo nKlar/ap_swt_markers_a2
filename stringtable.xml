@@ -391,7 +391,7 @@
 				Placed by: %3&lt;br/&gt;%4&lt;br/&gt;Time:&#160;
 				</English>
 				<Russian>
-				Поставил: %3&lt;br/&gt;%4&lt;br/&gt;Время:&#160;
+				Поставил: %4&lt;br/&gt;%5&lt;br/&gt;Время:&#160;
 				</Russian>
 			</Key>
 			<Key ID="STR_SWT_M_INFOLOADED">
@@ -723,6 +723,14 @@
 				</English>
 				<Russian>
 				Флаг
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_OBJECTIVE_CA">
+				<English>
+				Objective
+				</English>
+				<Russian>
+				Цель
 				</Russian>
 			</Key>
 			<Key ID="STR_SWT_M_PICKUP_CA">
