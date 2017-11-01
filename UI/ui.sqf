@@ -289,7 +289,7 @@ swt_markers_showInfo = {
 				<t align='right' color='#C0C0C0' size='0.7'>" +
 					_mark + (if (!isNil {_markParams select 11}) then {localize "STR_SWT_M_INFOLOADED"} else {""}) +
 				"</t>",
-			_markerName, "placeholder", _colorname, _channel];
+			_markerName, _colorname, _channel];
 			_ctrl_pos = ctrlPosition _ctrl_info;
 			if ((markerText _mark) == "") then {
 				_ctrl_info ctrlSetPosition [(_pos select 0) - (0.05)/2 + 0.07, (_pos select 1) - (_ctrl_pos select 3)/2, _ctrl_pos select 2, _ctrl_pos select 3];
