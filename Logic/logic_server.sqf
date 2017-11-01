@@ -1,5 +1,3 @@
-#define swt_markers_scope 0
-
 diag_log "AP SWT MARKERS SERVER VERSION";
 swt_markers_count = 0;
 swt_markers_isPlayer_bug = [];
@@ -302,11 +300,12 @@ swt_markers_logicServer_load = {
 	for "_i" from 0 to (count _cfg) - 1 do
 	{
 		_color = _cfg select _i;
-		if (getNumber (_color >> 'scope') > swt_markers_scope) then
+		if (getNumber (_color >> 'scope') > 1) then
 		{
 			swt_cfgMarkerColors_names set [count swt_cfgMarkerColors_names, (configName _color)];
 		};
 	};
+	swt_cfgMarkerColors_names = swt_cfgMarkerColors_names - ["Default"];
 	if (count swt_cfgMarkerColors_names != 0) then {publicVariable "swt_cfgMarkerColors_names"};
 
 	swt_cfgMarkers_names = [];
@@ -314,7 +313,7 @@ swt_markers_logicServer_load = {
 	for "_i" from 0 to (count _cfg) - 1 do
 	{
 		_marker = _cfg select _i;
-		if (getNumber (_marker >> 'scope') > swt_markers_scope) then
+		if (getNumber (_marker >> 'swt_show') > 0) then
 		{
 			swt_cfgMarkers_names set [count swt_cfgMarkers_names, (configName _marker)];
 		};

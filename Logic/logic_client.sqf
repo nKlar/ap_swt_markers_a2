@@ -78,7 +78,7 @@ swt_markers_createMarker = {
 	};
 };
 
-swt_markers_sys_sendMark = compile preprocessFileLineNumbers '\swt_markers\Logic\sendMark.sqf';
+swt_markers_sys_sendMark = compile preprocessFileLineNumbers '\ap_swt_markers_a2\Logic\sendMark.sqf';
 
 swt_markers_logicClient_create = {
 	[_this, true] call swt_markers_createMarker;

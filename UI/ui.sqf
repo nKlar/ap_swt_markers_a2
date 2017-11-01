@@ -7,20 +7,17 @@
 #define	colorPlayerChannel [0.8, 0.7, 1, 1]
 #define GR_W (((safezoneW/safezoneH) min 1.2)/40)
 #define GR_H ((((safezoneW/safezoneH) min 1.2)/1.2)/25)
-#define	cbSetChecked(a) ctrlSetText(if(a)then{"\swt_markers\data\CheckBox_checked_ca.paa"}else{"\swt_markers\data\CheckBox_unchecked_ca.paa"})
+#define	cbSetChecked(a) ctrlSetText(if(a)then{"\ap_swt_markers_a2\data\UI\CheckBox_checked_ca.paa"}else{"\ap_swt_markers_a2\data\UI\CheckBox_unchecked_ca.paa"})
 
-#define swt_markers_scope 0
-#define swt_markers_version 3
+#define swt_markers_version 4
 #define swt_markers_def_color_slot_params ["ColorBlue","ColorRed","ColorGreen","ColorBlack","ColorWhite","ColorOrange"]
-#define swt_markers_def_icon_slot_params ["mil_dot","o_inf","o_armor","hd_pickup","hd_warning","hd_unknown"]
-#define swt_markers_def_settings_params [true,true,true,true,true,false,false,true,true,"",true,true,false]
+#define swt_markers_def_icon_slot_params ["swt_dot_CA","swt_o_inf","swt_o_motor_inf","swt_o_armor","swt_unknown_CA","swt_kv"]
+#define swt_markers_def_settings_params [true,true,true,false,true,false,false,true,true,"",true,true,true]
 
 
-swt_markers_disable = false;
 swt_markers_load_enabled = true;
 swt_markers_load_enabled_for = true;
 swt_markers_load_enabled_when = true;
-swt_markers_bis_markers = false;
 sweetk_s = 1;
 swt_markers_time = 0;
 swt_markers_MapTime = 0;
@@ -37,8 +34,8 @@ swt_markers_delayCoeff = 25;
 
 if (isNil "swt_markers_pos_m") then {swt_markers_pos_m = [0,0]};
 
-call compile preprocessfilelinenumbers '\swt_markers\UI\MapHandlers.sqf';
-call compile preprocessfilelinenumbers '\swt_markers\UI\DisplayHandlers.sqf';
+call compile preprocessfilelinenumbers '\ap_swt_markers_a2\UI\MapHandlers.sqf';
+call compile preprocessfilelinenumbers '\ap_swt_markers_a2\UI\DisplayHandlers.sqf';
 
 swt_markers_available_channels = [localize "str_channel_global",localize "str_channel_side",localize "str_channel_command",localize "str_channel_group",localize "str_channel_vehicle",localize "str_channel_direct"];
 swt_markers_unavailable_channels = getArray (missionconfigfile >> "disableChannels");
@@ -490,10 +487,17 @@ swt_markers_lb_sel_adv = {
 	    };
 
 	    case 15001: {
-			_class = (_this select 0) lbData (_this select 1);
+	    	_ctrl = _this select 0;
+			_class = _ctrl lbData (_this select 1);
 			swt_markers_mark_type = _class;
 			swt_pic = getText (configFile >> "cfgMarkers" >> swt_markers_mark_type >> "icon");
-			((ctrlParent (_this select 0)) displayCtrl 204) ctrlSetText swt_pic;
+			_swt_text = getText (configFile >> "cfgMarkers" >> swt_markers_mark_type >> "name");
+			((ctrlParent _ctrl) displayCtrl 204) ctrlSetText swt_pic;
+			_ctrl ctrlSetTooltip _swt_text;
+			_ctrl ctrlRemoveAllEventHandlers 'MouseMoving';
+			_ctrl ctrlRemoveAllEventHandlers 'MouseZChanged';
+			_ctrl ctrlAddEventHandler ["MouseMoving", "(_this select 0) ctrlSetTooltip ''; (_this select 0) ctrlRemoveAllEventHandlers 'MouseMoving'; (_this select 0) ctrlRemoveAllEventHandlers 'MouseZChanged';"];
+			_ctrl ctrlAddEventHandler ["MouseZChanged", "(_this select 0) ctrlSetTooltip ''; (_this select 0) ctrlRemoveAllEventHandlers 'MouseMoving'; (_this select 0) ctrlRemoveAllEventHandlers 'MouseZChanged';"];
 	    };
 	};
 };
@@ -536,18 +540,20 @@ swt_markers_profileNil = {
 	_cfg = (configfile >> "CfgMarkerColors");
 	for "_i" from 0 to (count _cfg) - 1 do
 	{
-		if (getNumber (_cfg select _i >> 'scope') > swt_markers_scope) then
+		if (getNumber (_cfg select _i >> 'scope') > 1) then
 		{
 			swt_cfgMarkerColors set [count swt_cfgMarkerColors, _cfg select _i];
 		};
 	};
+	swt_cfgMarkerColors = swt_cfgMarkerColors - [(_cfg >> "Default")];
 	swt_cfgMarkers = [];
 	_cfg = (configfile >> "CfgMarkers");
 	for "_i" from 0 to (count _cfg) - 1 do
 	{
-		if (getNumber (_cfg select _i >> 'scope') > swt_markers_scope) then
+		_marker = _cfg select _i;
+		if (getNumber (_marker >> 'swt_show') > 0) then
 		{
-			swt_cfgMarkers set [count swt_cfgMarkers, _cfg select _i];
+			swt_cfgMarkers set [count swt_cfgMarkers, _marker];
 		};
 	};
 
@@ -755,7 +761,7 @@ swt_get_mark_param = {
 	[_mark,[_markerType,_markerColor,_markerPos,_markerText,_markerDir,_markerSize,_markerAlpha]];
 };
 
-swt_markers_cb_butt = compile preprocessFileLineNumbers '\swt_markers\UI\checkBoxesSett.sqf';
+swt_markers_cb_butt = compile preprocessFileLineNumbers '\ap_swt_markers_a2\UI\checkBoxesSett.sqf';
 
 
 swt_str_Replace = {

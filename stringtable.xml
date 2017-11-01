@@ -426,14 +426,6 @@
 				Отмена
 				</Russian>
 			</Key>
-			<Key ID="STR_SWT_M_INFO">
-				<English>
-				Main info
-				</English>
-				<Russian>
-				Информация
-				</Russian>
-			</Key>
 			<Key ID="STR_SWT_M_SET">
 				<English>
 				Settings
@@ -496,11 +488,17 @@
 			<Key ID="STR_SWT_M_ATXT">
 				<English>
 				Author: &lt;font color='#FFFF00'&gt;swatSTEAM&lt;/font&gt;.
-				&lt;br/&gt;Rebuilt for ArmaProject.Ru needs: &lt;font color='#FFFF00'&gt;Noma&lt;/font&gt;, &lt;font color='#FFFF00'&gt;nKlar&lt;/font&gt;.
+				&lt;br/&gt;
+				Refactoring and rework for ArmaProject.ru needs: &lt;font color='#FFFF00'&gt;nKlar&lt;/font&gt;.
+				&lt;br/&gt;
+				Active testing during rebuild: &lt;font color='#FFFF00'&gt;Noma&lt;/font&gt;.
 				</English>
 				<Russian>
 				Автор: &lt;font color='#FFFF00'&gt;swatSTEAM&lt;/font&gt;.
-				&lt;br/&gt;Переработали для ArmaProject.Ru: &lt;font color='#FFFF00'&gt;Noma&lt;/font&gt;, &lt;font color='#FFFF00'&gt;nKlar&lt;/font&gt;.
+				&lt;br/&gt;
+				Рефакторинг и переработка для ArmaProject.Ru: &lt;font color='#FFFF00'&gt;nKlar&lt;/font&gt;.
+				&lt;br/&gt;
+				Активное тестирование во время переработки: &lt;font color='#FFFF00'&gt;Noma&lt;/font&gt;.
 				</Russian>
 			</Key>
 			<Key ID="STR_SWT_DS_KV">
@@ -589,6 +587,166 @@
 				</English>
 				<Russian>
 				ДВ рация
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_AIR">
+				<English>
+				Air
+				</English>
+				<Russian>
+				Воздух
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_ARMOR">
+				<English>
+				Armored vehicle
+				</English>
+				<Russian>
+				Бронетехника
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_HQ">
+				<English>
+				HQ
+				</English>
+				<Russian>
+				Штаб
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_INF">
+				<English>
+				Infantry
+				</English>
+				<Russian>
+				Пехота
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_INSTALLATION">
+				<English>
+				Installation
+				</English>
+				<Russian>
+				Установка
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_MECH_INF">
+				<English>
+				Mech. infantry
+				</English>
+				<Russian>
+				Мех. пехота
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_MED">
+				<English>
+				Medic
+				</English>
+				<Russian>
+				Медик
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_MORTAR">
+				<English>
+				Mortar
+				</English>
+				<Russian>
+				Миномет
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_MOTOR_INF">
+				<English>
+				Moto. infantry
+				</English>
+				<Russian>
+				Мотопехота
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_RECON">
+				<English>
+				Recon
+				</English>
+				<Russian>
+				Разведка
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_UNKNOWN">
+				<English>
+				Unknown
+				</English>
+				<Russian>
+				Неизвестное
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_AMBUSH_CA">
+				<English>
+				Ambush
+				</English>
+				<Russian>
+				Засада
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_ARROW_CA">
+				<English>
+				Arrow
+				</English>
+				<Russian>
+				Стрелка
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_DESTROY_CA">
+				<English>
+				Destroy
+				</English>
+				<Russian>
+				Уничтожить
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_DOT_CA">
+				<English>
+				Dot
+				</English>
+				<Russian>
+				Точка
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_END_CA">
+				<English>
+				End
+				</English>
+				<Russian>
+				Конец
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_FLAG_CA">
+				<English>
+				Flag
+				</English>
+				<Russian>
+				Флаг
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_PICKUP_CA">
+				<English>
+				Pickup
+				</English>
+				<Russian>
+				Точка подбора
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_UNKNOWN_CA">
+				<English>
+				Unknown
+				</English>
+				<Russian>
+				Неизвестное
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_WARNING_CA">
+				<English>
+				Warning
+				</English>
+				<Russian>
+				Осторожно
 				</Russian>
 			</Key>
 		</Container>

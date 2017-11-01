@@ -14,7 +14,6 @@ class CfgPatches
 		author[]=
 		{
 			"swatSTEAM",
-			"Noma",
 			"nKlar"
 		};
 		versionDesc="SWT Markers, rebuilt by ArmaProject";
@@ -27,7 +26,7 @@ class Extended_PreInit_EventHandlers
 {
 	class swt_markers
 	{
-		Init="execVM '\swt_markers\fn_init.sqf'";
+		Init="execVM '\ap_swt_markers_a2\fn_init.sqf'";
 	};
 
 	delete c_persistent_markers; //Anti tu_markers
@@ -39,24 +38,8 @@ class Extended_PostInit_EventHandlers //Anti tu_markers
 	delete c_persistent_markers;
 };
 
+#include "data\Markers\markers.cpp"
 
-class CfgMarkers
-{
-	class swt_kv
-	{
-		scope=2;
-		name="$STR_SWT_M_KV";
-		icon="\swt_markers\data\marker_kv_ca.paa";
-		color[]={1,0,0,1};
-		size=29;
-		shadow=1;
-	};
-	class swt_dv: swt_kv
-	{
-		name="$STR_SWT_M_DV";
-		icon="\swt_markers\data\marker_dv_ca.paa";
-	};
-};
 class RscListBox;
 class RscIGUIListBox;
 class RscXListBox;
@@ -327,8 +310,8 @@ class swt_RscCombo: RscCombo
 	colorBackground[]={0,0,0,0.69999999};
 	colorSelectBackground[]={1,1,1,0.69999999};
 	colorScrollbar[]={1,0,0,1};
-	arrowEmpty="\swt_markers\data\arrow_combo_ca.paa";
-	arrowFull="\swt_markers\data\arrow_combo_active_ca.paa";
+	arrowEmpty="\ap_swt_markers_a2\data\UI\arrow_combo_ca.paa";
+	arrowFull="\ap_swt_markers_a2\data\UI\arrow_combo_active_ca.paa";
 	wholeHeight=0.44999999;
 	colorActive[]={1,0,0,1};
 	colorDisabled[]={1,1,1,0.25};
@@ -536,7 +519,7 @@ class RscDisplayInsertMarker
 		class Settings_butt: swt_RscActivePicture
 		{
 			idc=900;
-			text="\swt_markers\data\icon_config_ca.paa";
+			text="\ap_swt_markers_a2\data\UI\icon_config_ca.paa";
 			x=0;
 			y=0;
 			w="0.75 *  ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
@@ -546,7 +529,7 @@ class RscDisplayInsertMarker
 		class show_lb_butt: swt_RscActivePicture
 		{
 			idc=904;
-			text="\swt_markers\data\icon_menu.paa";
+			text="\ap_swt_markers_a2\data\UI\icon_menu.paa";
 			x=0;
 			y=0;
 			w="0.75 *  ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
