@@ -140,7 +140,10 @@ swt_markers_logicServer_req_markers = {
 			};
 		};
 	} forEach ["S","S2","C","GL","V","GR"];
-	(owner _player) publicVariableClient "swt_markers_send_JIP";
+	if(count swt_markers_send_JIP > 0)
+	{
+		(owner _player) publicVariableClient "swt_markers_send_JIP";
+	};
 };
 
 swt_markers_logicServer_change_mark = {
