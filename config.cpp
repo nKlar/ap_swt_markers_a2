@@ -1,6 +1,6 @@
 class CfgPatches
 {
-	class ap_markers
+	class ap_swt_markers_a2
 	{
 		units[]={};
 		weapons[]={};
@@ -24,7 +24,7 @@ class CfgPatches
 };
 class Extended_PreInit_EventHandlers
 {
-	class swt_markers
+	class ap_swt_markers_a2
 	{
 		Init="execVM '\ap_swt_markers_a2\fn_init.sqf'";
 	};
