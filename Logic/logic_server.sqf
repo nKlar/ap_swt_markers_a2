@@ -1,3 +1,5 @@
+#define DEBUG
+
 diag_log "AP SWT MARKERS SERVER VERSION";
 swt_markers_count = 0;
 swt_markers_isPlayer_bug = [];
@@ -6,6 +8,7 @@ swt_markers_isPlayer_bug = [];
 } forEach ["S","S2","C","GL","V","GR","D"];
 
 // callbacks: swt_markers_send_JIP  swt_markers_send_mark swt_markers_send_dir swt_markers_send_del swt_marker_send_load
+
 
 swt_markers_logicServer_regMark = {
 	private ["_mark"];
@@ -87,6 +90,9 @@ swt_markers_logicServer_regMark = {
 		if (isPlayer _x or {time==0 and {_player in swt_markers_isPlayer_bug}}) then {
 			_cond_x = call compile _cond;
 			if _cond_x then {
+				#ifdef DEBUG
+					diag_log format["SWT_MARKERS OUT (swt_markers_send_mark): %1", swt_markers_send_mark];
+				#endif
 				(owner _x) publicVariableClient "swt_markers_send_mark";
 				if (!isMultiplayer and {_x == player}) then {swt_markers_send_mark call swt_markers_logicClient_create};
 			};
@@ -140,8 +146,11 @@ swt_markers_logicServer_req_markers = {
 			};
 		};
 	} forEach ["S","S2","C","GL","V","GR"];
-	if(count swt_markers_send_JIP > 0)
+	if(count swt_markers_send_JIP > 0) then
 	{
+		#ifdef DEBUG
+			diag_log format["SWT_MARKERS OUT (swt_markers_send_JIP): %1", swt_markers_send_JIP];
+		#endif
 		(owner _player) publicVariableClient "swt_markers_send_JIP";
 	};
 };
@@ -164,7 +173,14 @@ swt_markers_logicServer_change_mark = {
 		    case "DEL": {
 		    	_arr set [_index, "_DELETE_"];
 		    	_arr = _arr - ["_DELETE_"];
-		    	_channelData set [_arrIndex, _arr];
+		    	if(!isNil "_arrIndex") then
+		    	{
+		    		_channelData set [_arrIndex, _arr];
+		    	}
+		    	else
+		    	{
+		    		missionNamespace setVariable [("swt_markers_logicServer_" + _channel), _arr];
+		    	};
 		    };
 
 			case "POS": {
@@ -200,13 +216,64 @@ swt_markers_logicServer_change_mark = {
     			} forEach (_channelData select _i);
     		};
     	};
-    	if (!_find) then {diag_log "SWT MARKERS: CHANGE MARKER FAIL, CAN'T FIND DATA";};
+    	if (!_find) then {diag_log "SWT_MARKERS: CHANGE MARKER FAIL, CAN'T FIND DATA";};
+	};
+
+	_send_toChannel = {
+		_varToSendString = _this;
+
+		_cond = "";
+		_units = [];
+
+			switch (_channel) do {
+			    case "S": {
+			    	_cond = "(side _x == side _player)";
+			    	_units = (playableUnits+switchableUnits);
+			    };
+			    case "C": {
+			    	_cond = "((((leader _x == _x) or (((effectiveCommander (vehicle _x)) == _x) and (vehicle _x != _x))) and (side _x == side _player)) or (_player == _x))";
+			    	_units = (playableUnits+switchableUnits);
+			    };
+			    case "GL": {
+			    	_cond = "true";
+			    	_units = (playableUnits+switchableUnits);
+			    };
+			    case "V": {
+			    	_cond = "(_x in vehicle _player)";
+			    	_units = (playableUnits+switchableUnits);
+			    };
+			    case "GR": {
+			    	_cond = "(group _x == group _player)";
+			    	_units = units group _player;
+			    };
+			    case "D": {
+			    	_cond = "(_x distance _player < 15)";
+			    	_units = (playableUnits+switchableUnits);
+			    };
+			};
+
+
+		{
+			if (isPlayer _x or {time==0 and {_player in swt_markers_isPlayer_bug}}) then {
+				_cond_x = call compile _cond;
+				if _cond_x then {
+					#ifdef DEBUG
+						diag_log format["SWT_MARKERS OUT (%1): %2", _varToSendString, call compile _varToSendString];
+					#endif
+					(owner _x) publicVariableClient _varToSendString;
+				};
+			};
+		} forEach _units;
 	};
 
 	_action = _this select 0;
 	_player = _this select 1;
 	_mark_id = _this select 2;
 	_channel = _this select 3;
+	if(isNil "_channel") exitWith {
+		diag_log "SWT_MARKERS: CHANGE MARKER FAIL, NO CHANNEL";
+	};
+
 	_dir = 0;
 	_pos = [];
 
@@ -214,20 +281,20 @@ swt_markers_logicServer_change_mark = {
 	    case "DIR": {
 	    	_dir = _this select 4;
 	    	swt_markers_send_dir = [_mark_id,_dir,_player, time];
-			publicVariable "swt_markers_send_dir";
+			"swt_markers_send_dir" call _send_toChannel;
 			if (hasInterface) then {swt_markers_send_dir call swt_markers_logicClient_dir};
 	    };
 
 	     case "DEL": {
 	    	swt_markers_send_del = [_mark_id,_player];
-			publicVariable "swt_markers_send_del";
+			"swt_markers_send_del" call _send_toChannel;
 			if (hasInterface) then {swt_markers_send_del call swt_markers_logicClient_del};
 	    };
 
 		case "POS": {
 			_pos = _this select 4;
 		   swt_markers_send_pos = [_mark_id,_pos,_player, time];
-		   publicVariable "swt_markers_send_pos";
+		   "swt_markers_send_pos" call _send_toChannel;
 		   if (hasInterface) then {swt_markers_send_pos call swt_markers_logicClient_pos};
 	   };
 	};
@@ -254,6 +321,9 @@ swt_markers_logicServer_change_mark = {
 		    };
 		    case "GL": {
 		    	{
+		    		#ifdef DEBUG
+		    			if ((typeName _x) == "STRING") then {diag_log format["SWT_MARKERS: change_mark_channel_data_string: %1",_x];};
+		    		#endif
 					if (_x select 0 == _mark_id) exitWith {
 						[_action, _x, _channelData, _forEachIndex] call _processMarker;
 					};
@@ -287,6 +357,9 @@ swt_markers_logicServer_load = {
     {
     	if (isPlayer _x or {time==0 and {_player in swt_markers_isPlayer_bug}}) then {
 	    	if (side _player == side _x) then {
+	    		#ifdef DEBUG
+						diag_log format["SWT_MARKERS OUT (swt_markers_send_load): %1", swt_markers_send_load];
+				#endif
 	    		(owner _x) publicVariableClient "swt_markers_send_load";
 	    		if (!isMultiplayer and {_x == player}) then {swt_markers_send_load call swt_markers_logicClient_load};
 	     	};
@@ -296,6 +369,9 @@ swt_markers_logicServer_load = {
 
 [] spawn {
 	swt_markers_daytime = daytime;
+	#ifdef DEBUG
+		diag_log format["SWT_MARKERS OUT (swt_markers_daytime): %1", swt_markers_daytime];
+	#endif
 	publicVariable "swt_markers_daytime";
 
 	swt_cfgMarkerColors_names = [];
@@ -309,7 +385,12 @@ swt_markers_logicServer_load = {
 		};
 	};
 	swt_cfgMarkerColors_names = swt_cfgMarkerColors_names - ["Default"];
-	if (count swt_cfgMarkerColors_names != 0) then {publicVariable "swt_cfgMarkerColors_names"};
+	if (count swt_cfgMarkerColors_names != 0) then {
+		#ifdef DEBUG
+			diag_log format["SWT_MARKERS OUT (swt_cfgMarkerColors_names): %1", swt_cfgMarkerColors_names];
+		#endif
+		publicVariable "swt_cfgMarkerColors_names"
+	};
 
 	swt_cfgMarkers_names = [];
 	_cfg = (configfile >> "CfgMarkers");
@@ -321,22 +402,39 @@ swt_markers_logicServer_load = {
 			swt_cfgMarkers_names set [count swt_cfgMarkers_names, (configName _marker)];
 		};
 	};
-	if (count swt_cfgMarkers_names != 0) then {publicVariable "swt_cfgMarkers_names"};
+	if (count swt_cfgMarkers_names != 0) then {
+		#ifdef DEBUG
+			diag_log format["SWT_MARKERS OUT (swt_cfgMarkers_names): %1", swt_cfgMarkers_names];
+		#endif
+		publicVariable "swt_cfgMarkers_names"
+	};
 
 
 	"swt_markers_sys_client_send" addPublicVariableEventHandler {
+		#ifdef DEBUG
+			diag_log format["SWT_MARKERS IN (swt_markers_sys_client_send): %1", _this];
+		#endif
 		(_this select 1) call swt_markers_logicServer_regMark;
 	};
 
 	"swt_markers_sys_req_markers" addPublicVariableEventHandler {
+		#ifdef DEBUG
+			diag_log format["SWT_MARKERS IN (swt_markers_sys_req_markers): %1", _this];
+		#endif
 		(_this select 1) call swt_markers_logicServer_req_markers;
 	};
 
 	"swt_markers_sys_change_mark" addPublicVariableEventHandler {
+		#ifdef DEBUG
+			diag_log format["SWT_MARKERS IN (swt_markers_sys_change_mark): %1", _this];
+		#endif
 		(_this select 1) call swt_markers_logicServer_change_mark;
 	};
 
 	"swt_markers_sys_load" addPublicVariableEventHandler {
+		#ifdef DEBUG
+			diag_log format["SWT_MARKERS IN (swt_markers_sys_load): %1", _this];
+		#endif
 		(_this select 1) call swt_markers_logicServer_load;
 	};
 };

@@ -3,7 +3,11 @@ swt_markers_MapMouseUp = {
 		if !(isNil "swt_mark_to_change_dir") then {
 			_dir = + swt_markers_direction;
 			_mark = swt_mark_to_change_dir;
-			swt_markers_sys_change_mark = ["DIR", player, _mark, swt_mark_to_change_dir call swt_markers_getChannel, _dir];
+			if((swt_markers_allMarkers find _mark) == -1) exitWith {
+				wt_mark_to_change_dir = nil;
+				swt_markers_direction = nil;
+			};
+			swt_markers_sys_change_mark = ["DIR", player, _mark, _mark call swt_markers_getChannel, _dir];
 			if (!isMultiplayer) then {swt_markers_sys_change_mark call swt_markers_logicServer_change_mark};
 			publicVariableServer "swt_markers_sys_change_mark";
 			swt_mark_to_change_dir = nil;
@@ -33,7 +37,11 @@ swt_markers_MapMouseUp = {
 		if !(isNil "swt_mark_to_change_pos") then {
 			_coords = + swt_markers_position;
 			_mark = swt_mark_to_change_pos;
-			swt_markers_sys_change_mark = ["POS", player, _mark, swt_mark_to_change_pos call swt_markers_getChannel, _coords];
+			if((swt_markers_allMarkers find _mark) == -1) exitWith {
+				swt_mark_to_change_pos = nil;
+				swt_markers_position = nil;
+			};
+			swt_markers_sys_change_mark = ["POS", player, _mark, _mark call swt_markers_getChannel, _coords];
 			if (!isMultiplayer) then {swt_markers_sys_change_mark call swt_markers_logicServer_change_mark};
 			publicVariableServer "swt_markers_sys_change_mark";
 			swt_mark_to_change_pos = nil;
