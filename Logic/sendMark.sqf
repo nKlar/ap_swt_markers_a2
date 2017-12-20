@@ -55,12 +55,157 @@ switch (swt_markers_channel) do {
 
 if (!_go) exitWith {};
 
+_swt_fnc_macroGenerateFrqs = {
+	private ["_times","_return","_separator"];
+	_times = [10, _this select 0] select ((_this select 0)<10);
+	_return = "";
+	_separator = " ";
+	if(!isNil{_this select 1}) then
+	{
+		_separator = _this select 1;
+	};
+
+	switch (swt_markers_mark_type) do
+	{
+		case "swt_kv":
+		{
+			for "_i" from 1 to _times-1 step 1 do
+			{
+				_return = _return + str([([30,512] call BIS_fnc_randomNum), 3] call BIS_fnc_cutDecimals) + _separator;
+			};
+			_return = _return + str([([30,512] call BIS_fnc_randomNum), 3] call BIS_fnc_cutDecimals);
+		};
+		case "swt_dv":
+		{
+			for "_i" from 1 to _times-1 step 1 do
+			{
+				_return = _return + str([([1,25] call BIS_fnc_randomNum), 3] call BIS_fnc_cutDecimals) + _separator;
+			};
+			_return = _return + str([([1,25] call BIS_fnc_randomNum), 3] call BIS_fnc_cutDecimals);
+		};
+	};
+
+	_return;
+};
+
+_swt_fnc_processMacro = {
+	private ["_macro","_return"];
+	_macro = _this;
+	_return = "";
+	try
+	{
+		_macro = call compile ("[]+" + _macro + "+[]");
+		switch (count _macro) do
+		{
+			case 1:
+			{
+				if(typeName(_macro select 0) == 'SCALAR') then
+				{
+					_return = ([round(_macro select 0)] call _swt_fnc_macroGenerateFrqs);
+				};
+			};
+
+			case 2:
+			{
+				if(typeName(_macro select 0) == 'SCALAR' && typeName(_macro select 1) == 'STRING') then
+				{
+					_return = ([round(_macro select 0), (_macro select 1)] call _swt_fnc_macroGenerateFrqs);
+				};
+			};
+		};
+	}
+	catch
+	{
+		_return = "";
+	};
+	_return;
+};
+
+//${6,' // '} = [6,' // ']
+_swt_fnc_processMacros = {
+	private ["_text","_return","_arrayText","_macroControl","_macroStart","_macro"];
+	_text = _this;
+	_return = [];
+
+	_arrayText = toArray _text;
+
+	_macroControl = false;
+	_macroStart = false;
+	_macro = [];
+
+	if(( _arrayText find 36) == -1) exitWith {_text};
+
+	{
+		switch (_x) do
+		{
+			case 36: //$
+			{
+				_macroControl = true;
+			};
+			case 123: //{
+			{
+				if(_macroControl) then
+				{
+					_macroStart = true;
+					_macro set [count _macro,91]; //[
+				}
+				else
+				{
+					_return set [count _return,_x];
+				};
+			};
+			case 125: //}
+			{
+				if(_macroStart) then
+				{
+					_macro set [count _macro,93]; //]
+					_macroStart = false;
+					_macroControl = false;
+					_macro = _macro - [59];
+					_macro = toString _macro;
+					_macro = _macro call _swt_fnc_processMacro;
+					_return = _return + (toArray _macro);
+					_macro = [];
+				}
+				else
+				{
+					_return set [count _return,_x];
+				};
+			};
+			default
+			{
+				if(_macroControl && _macroStart) then
+				{
+					_macro set [count _macro,_x];
+				}
+				else
+				{
+					if(_macroControl) then {
+						_return set [count _return,36];
+						_macroControl = false;
+					};
+					_return set [count _return,_x];
+				};
+			};
+		};
+	} forEach _arrayText;
+
+	toString _return;
+};
+
+
 switch (_action) do {
     case "mark": {
     	[0,0] call swt_markers_MapMouseUp;
 		_displayMark = _params;
 		_WorldCoord = (_displayMap displayCtrl 51) ctrlMapScreenToWorld [((ctrlPosition (_displayMark displayCtrl 204)) select 0)+((ctrlPosition (_displayMark displayCtrl 204)) select 2)/2,((ctrlPosition (_displayMark displayCtrl 204)) select 1)+((ctrlPosition (_displayMark displayCtrl 204)) select 3)/2];
-		_text =  _text + ctrlText (_displayMark displayctrl 203);
+		_text = _text + ctrlText (_displayMark displayctrl 203);
+
+		if (swt_markers_mark_type in ["swt_kv", "swt_dv"]) then
+		{
+			_text = _text call _swt_fnc_processMacros;
+		};
+
 		_send set [1,[_swtid,_channel,_text, _WorldCoord, swt_cfgMarkers_names find swt_markers_mark_type, swt_cfgMarkerColors_names find swt_markers_mark_color, swt_markers_mark_dir, sweetk_s, name player]];
 		if (!(swt_markers_ctrlState)) then {(_displayMark closeDisplay 0)};
     };

@@ -8,8 +8,7 @@ class CfgPatches
 		requiredAddons[]=
 		{
 			"Extended_EventHandlers",
-			"CAUI",
-			"tu_markers"
+			"CAUI"
 		};
 		author[]=
 		{
@@ -28,14 +27,6 @@ class Extended_PreInit_EventHandlers
 	{
 		Init="execVM '\ap_swt_markers_a2\fn_init.sqf'";
 	};
-
-	delete c_persistent_markers; //Anti tu_markers
-};
-
-
-class Extended_PostInit_EventHandlers //Anti tu_markers
-{
-	delete c_persistent_markers;
 };
 
 #include "data\Markers\markers.cpp"
@@ -358,7 +349,6 @@ class swt_RscButton
 };
 class RscDisplayMainMap
 {
-	onKeyUp = ""; //Anti tu_markers
 	class controls
 	{
 		class swt_markers_infoCtrl: swt_RscStructuredText
@@ -1165,6 +1155,15 @@ class RscDisplayInsertMarker
 					colorBackground[]={0.95700002,0,0,0.80000001};
 					color[] = {0,0,0,1};
 					OnButtonClick = "call swt_markers_resync_markers";
+				};
+				class swt_ButtonBugReport: swt_ButtonSAVE
+				{
+					idc = 350;
+					text = "$STR_SWT_M_BUGREPORT";
+					y = "(11 + 12*0.15) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
+					colorBackground[]={0.95700002,0,0,0.80000001};
+					color[] = {0,0,0,1};
+					OnButtonClick = "call swt_markers_report_bug";
 				};
 			};
 		};

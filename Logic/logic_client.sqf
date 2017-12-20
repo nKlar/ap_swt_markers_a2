@@ -140,23 +140,160 @@ swt_markers_logicClient_load = {
 };
 
 swt_markers_parse_frequency = {
-	private["_text", "_array", "_min", "_max", "_title", "_frequencies", "_shifts", "_arrayDouble", "_i", "_titleReady", "_prefix", "_Sender", "_swt_markers_parse_squad"];
-	_text = _this select 0;
-	_array = toArray _text;
-	_array = _array - [60,62];
-	_min = _this select 1;
-	_max = _this select 2;
-	_Sender = _this select 3;
+	private["_input","_frqMin","_frqMax","_sender","_arrayInput","_title","_titleReady","_frequencies","_shifts","_isNumber","_blocks","_block","_separator","_prefix","_blockSize","_numberArray","_firstChar","_lastChar","_char","_num","_swt_markers_parse_squad","_parsed"];
+
+	_isNumber =
+	{
+		(_this >= 48 && _this <= 57);
+	};
+
+	_input =  _this select 0;
+	_frqMin = _this select 1;
+	_frqMax = _this select 2;
+	_sender = _this select 3;
+
+	_arrayInput = toArray _input;
+	_arrayInput = _arrayInput - [60,62];
 
 	_title = [];
+	_titleReady = false;
 	_frequencies = [];
 	_shifts = [];
-	_arrayDouble = [];
-	_i = 0;
-	_titleReady = false;
-	_prefix = -1;
 
+	_blocks = [];
+	_block = [];
+	_separator = [];
+
+
+
+//Separating to data blocks
+	{
+		if((_x in [43,45,44,46]) || (_x call _isNumber) || (_x >= 1025 && _x <= 1105) || (_x >= 65 && _x <= 90) || (_x >= 97 && _x <= 122)) then
+		{
+			if(count _separator > 0) then
+			{
+				_blocks set [count _blocks, ["s",_separator]];
+				_separator = [];
+			};
+			_block set [count _block, _x];
+		}
+		else
+		{
+			if(count _block > 0) then
+			{
+				_blocks set [count _blocks, ["b",_block]];
+				_block = [];
+			};
+			_separator set [count _separator, _x];
+		}
+	} forEach _arrayInput;
+
+	if(count _separator > 0) then
+	{
+		_blocks set [count _blocks, ["s",_separator]];
+		_separator = [];
+	};
+	if(count _block > 0) then
+	{
+		_blocks set [count _blocks, ["b",_block]];
+		_block = [];
+	};
+
+
+//Parsing
+	{
+		switch (_x select 0) do
+		{
+			_block = (_x select 1);
+			case "b":
+			{
+				_prefix = -1;
+				_blockSize = (count _block);
+				_numberArray = [];
+				//if first char is prefix
+				if((_block select 0) in [43,45]) then {_prefix = (_block select 0)};
+				//if first char is number
+				_firstChar = (_block select ([0,1] select(_prefix != -1)));
+				if(_firstChar call _isNumber) then
+				{
+					_numberArray set [count _numberArray, _firstChar];
+					//if last char is number
+					_lastChar = (_block select (_blockSize-1));
+					if(_lastChar call _isNumber) then
+					{
+						//check if other symbols in block are valid
+						for "_i" from ([1,2] select(_prefix != -1)) to _blockSize-2 do
+						{
+							_char = (_block select _i);
+							switch (true) do
+							{
+								case (_char call _isNumber || _char == 46):
+								{
+									_numberArray set [count _numberArray, _char];
+								};
+								case (_char == 44):
+								{
+									_numberArray set [count _numberArray, 46];
+								};
+								default
+								{
+									if(!_titleReady) then
+									{
+										_title = _title + _block;
+									};
+									_i = 999;
+								};
+							};
+						};
+						_numberArray set [count _numberArray, _lastChar];
+						_titleReady = true;
+
+						_num = (floor((parseNumber (toString _numberArray))*1000))/1000;
+						if(_prefix != -1) then
+						{
+							_prefix = toString [_prefix];
+							_shifts set[count _shifts, format["%1%2",_prefix,_num]];
+							_prefix = -1;
+						}
+						else
+						{
+							if(_num >= _frqMin && _num <= _frqMax) then
+							{
+								_frequencies set[count _frequencies, _num];
+							};
+						};
+					}
+					else
+					{
+						if(!_titleReady) then
+						{
+							_title = _title + _block;
+						};
+					};
+				}
+				else
+				{
+					if(!_titleReady) then
+					{
+						_title = _title + _block;
+					};
+				};
+			};
+
+			case "s":
+			{
+				if(!_titleReady) then
+				{
+					_title = _title + _block;
+				};
+			};
+		};
+	} forEach _blocks;
+
+
+//Formating
 	_swt_markers_parse_squad = {
+		private["_name","_array","_srch"];
 		_name = name (_this select 0);
 		_array = toArray(_name);
 		_srch = _array find 93;
@@ -169,72 +306,16 @@ swt_markers_parse_frequency = {
 		(toString _array);
 	};
 
-	while{(_i < (count _array))} do
-	{
-		_char = (_array select _i);
-		if(_char >= 48 && _char <= 57) then
-		{
-			while {(_char >= 48 && _char <= 57) || (_char in [44,46])} do
-			{
-				if(_char == 44) then {_char = _char + 2;};
-				_arrayDouble set [count _arrayDouble, _char];
-				_i = _i + 1;
-				_char = (_array select _i);
-			};
-			_stringDouble = toString _arrayDouble;
-			_double = parseNumber _stringDouble;
-			if(_prefix != -1) then
-			{
-				_prefix = toString [_prefix];
-				_shifts set[count _shifts, format["%1%2",_prefix,_double]];
-				_prefix = -1;
-			}
-			else
-			{
-				if(_double >= _min && _double <= _max) then
-				{
-					_frequencies set[count _frequencies, _double];
-					_titleReady = true;
-				};
-			};
 
-			if(!_titleReady) then
-			{
-				_title = _title + _arrayDouble;
-			};
-			_arrayDouble = [];
-		}
-		else
-		{
-			switch (true) do
-			{
-				case (_char in [43,45]):
-				{
-					_prefix = _char;
-				};
-
-				case (_char != 32):
-				{
-					_prefix = -1;
-				};
-			};
-			if(!_titleReady) then
-			{
-				_title set [count _title, _char];
-			};
-			_i = _i + 1;
-		}
-	};
-
-	_parsed = (toString _array);
+	_parsed = (toString _arrayInput);
 	switch (true) do
 	{
-		case ((group _Sender) == (group player)):
+		case ((group _sender) == (group player)):
 		{
 			_parsed = format[localize "STR_SWT_MY_GRP", _parsed];
 		};
 
-		case (([_Sender] call _swt_markers_parse_squad) == ([player] call _swt_markers_parse_squad)):
+		case (([_sender] call _swt_markers_parse_squad) == ([player] call _swt_markers_parse_squad)):
 		{
 			_parsed = format[localize "STR_SWT_MY_SQD", _parsed];
 		};
@@ -290,6 +371,46 @@ swt_markers_resync_markers = {
 			_ctrl ctrlSetBackgroundColor [0.95700002,0,0,0.80000001];
 			canSync = true;
 		};
+	};
+};
+
+canReport = true;
+
+swt_markers_report_bug = {
+	if(!isNil "swt_markers_allow_bugreport" && swt_markers_allow_bugreport) then
+	{
+		if (canReport) then
+		{
+			canReport = false;
+
+			_name = name player;
+			_mission = missionName;
+
+			swt_markers_send_bug_report = [_name,_mission,swt_markers_allMarkers,swt_markers_allMarkers_params];
+			publicVariableServer "swt_markers_send_bug_report";
+
+			[] spawn
+			{
+				disableSerialization;
+				_timer = 60*10;
+				while {_timer > 0} do
+				{
+					_ctrl = ((findDisplay 54) displayCtrl 350);
+					_ctrl ctrlSetText ((localize "STR_SWT_M_BUGREPORT") + " (" + str _timer + ")");
+					_ctrl ctrlSetBackgroundColor [0.259,0.286,0.286,1];
+					_timer = _timer - 1;
+					uiSleep 1;
+				};
+				_ctrl = ((findDisplay 54) displayCtrl 350);
+				_ctrl ctrlSetText (localize "STR_SWT_M_BUGREPORT");
+				_ctrl ctrlSetBackgroundColor [0.95700002,0,0,0.80000001];
+				canReport = true;
+			};
+		};
+	}
+	else
+	{
+		hint localize "STR_SWT_M_ALLOWBUGREPORT";
 	};
 };
 

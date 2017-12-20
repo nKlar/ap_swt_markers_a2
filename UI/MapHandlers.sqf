@@ -241,6 +241,13 @@ swt_markers_MapKeyDown = {
 	    	_marker = if(count _marker > 1 && (_marker select 0) == "marker") then {_marker select 1};
 	    	_index = swt_markers_allMarkers find _marker;
 			if (_index >= 0) exitWith {
+				_markerData = (swt_markers_allMarkers_params select _index);
+				_type = swt_cfgMarkers_names select (_markerData select 4);
+				if(_type in ["swt_kv","swt_dv"]) then {
+					if(name player != (_markerData select 8)) exitWith {
+						systemChat (localize "STR_SWT_M_MESS_CANTDELFRQ");
+					};
+				};
 				swt_markers_sys_change_mark = ["DEL", player, _marker, _marker call swt_markers_getChannel];
 				if (!isMultiplayer) then {swt_markers_sys_change_mark call swt_markers_logicServer_change_mark};
 				publicVariableServer "swt_markers_sys_change_mark";
