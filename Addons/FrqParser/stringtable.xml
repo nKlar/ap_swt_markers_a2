@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project name="SWT_Markers">
+	<Package name="SWT_Names">
+		<Container name="STR_SWT_M">
+			<Key ID="STR_SWT_DS_KV">
+				<English>
+				SW freq.
+				</English>
+				<Russian>
+				Частоты КВ
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_DS_DV">
+				<English>
+				LR freq.
+				</English>
+				<Russian>
+				Частоты ДВ
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_DE_FREQ">
+				<English>
+				Frequencies
+				</English>
+				<Russian>
+				Частоты
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_FQ_MAIN">
+				<English>
+				&lt;font size=14 color='#FFFFFF'&gt; Frequency: &lt;/font&gt;&lt;font size=12 color='#FFFF00'&gt;%1&lt;/font&gt;
+				</English>
+				<Russian>
+				&lt;font size=14 color='#FFFFFF'&gt; Частота: &lt;/font&gt;&lt;font size=12 color='#FFFF00'&gt;%1&lt;/font&gt;
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_FQ_N">
+				<English>
+				&lt;font size=13 color='#FFFFFF'&gt;  %1 reserve: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
+				</English>
+				<Russian>
+				&lt;font size=13 color='#FFFFFF'&gt;  %1 резерв: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_FQ_ST">
+				<English>
+				&lt;font size=13 color='#FFFFFF'&gt;  %1 shift: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
+				</English>
+				<Russian>
+				&lt;font size=13 color='#FFFFFF'&gt;  %1 сдвиг: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_MY_GRP">
+				<English>
+				&lt;font color='#556B2F'&gt;%1&lt;/font&gt;
+				</English>
+				<Russian>
+				&lt;font color='#556B2F'&gt;%1&lt;/font&gt;
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_MY_SQD">
+				<English>
+				&lt;font color='#ABB78D'&gt;%1&lt;/font&gt;
+				</English>
+				<Russian>
+				&lt;font color='#ABB78D'&gt;%1&lt;/font&gt;
+				</Russian>
+			</Key>
+		</Container>
+	</Package>
+</Project>

@@ -1,3 +1,5 @@
+#define AntiTuMarkers
+
 class CfgPatches
 {
 	class ap_swt_markers_a2
@@ -8,6 +10,9 @@ class CfgPatches
 		requiredAddons[]=
 		{
 			"Extended_EventHandlers",
+			#ifdef AntiTuMarkers
+			"tu_markers",
+			#endif
 			"CAUI"
 		};
 		author[]=
@@ -27,7 +32,19 @@ class Extended_PreInit_EventHandlers
 	{
 		Init="execVM '\ap_swt_markers_a2\fn_init.sqf'";
 	};
+
+	#ifdef AntiTuMarkers
+	delete c_persistent_markers;
+	#endif
+
 };
+
+#ifdef AntiTuMarkers
+class Extended_PostInit_EventHandlers //Anti tu_markers
+{
+	delete c_persistent_markers;
+};
+#endif
 
 #include "data\Markers\markers.cpp"
 
@@ -349,6 +366,10 @@ class swt_RscButton
 };
 class RscDisplayMainMap
 {
+	#ifdef AntiTuMarkers
+	onKeyUp = ""; //Anti tu_markers
+	#endif
+
 	class controls
 	{
 		class swt_markers_infoCtrl: swt_RscStructuredText
@@ -1147,24 +1168,11 @@ class RscDisplayInsertMarker
 					color[]={0,0,0,1};
 					OnButtonClick="call swt_def; (ctrlParent (_this select 0)) closeDisplay 0;";
 				};
-				class swt_ButtonResync: swt_ButtonSAVE
-				{
-					idc = 349;
-					text = "$STR_SWT_M_RESYNC";
-					y = "(10 + 11*0.15) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
-					colorBackground[]={0.95700002,0,0,0.80000001};
-					color[] = {0,0,0,1};
-					OnButtonClick = "call swt_markers_resync_markers";
-				};
-				class swt_ButtonBugReport: swt_ButtonSAVE
-				{
-					idc = 350;
-					text = "$STR_SWT_M_BUGREPORT";
-					y = "(11 + 12*0.15) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
-					colorBackground[]={0.95700002,0,0,0.80000001};
-					color[] = {0,0,0,1};
-					OnButtonClick = "call swt_markers_report_bug";
-				};
+				//MarkerResync addon
+				#include "Addons\MarkerResync\control.cpp"
+
+				//BugReport addon
+				#include "Addons\BugReport\control.cpp"
 			};
 		};
 	};
