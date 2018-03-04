@@ -3,7 +3,11 @@ swt_markers_MapMouseUp = {
 		if !(isNil "swt_mark_to_change_dir") then {
 			_dir = + swt_markers_direction;
 			_mark = swt_mark_to_change_dir;
-			swt_markers_sys_change_mark = ["DIR", player, _mark, swt_mark_to_change_dir call swt_markers_getChannel, _dir];
+			if((swt_markers_allMarkers find _mark) == -1) exitWith {
+				wt_mark_to_change_dir = nil;
+				swt_markers_direction = nil;
+			};
+			swt_markers_sys_change_mark = ["DIR", player, _mark, _mark call swt_markers_getChannel, _dir];
 			if (!isMultiplayer) then {swt_markers_sys_change_mark call swt_markers_logicServer_change_mark};
 			publicVariableServer "swt_markers_sys_change_mark";
 			swt_mark_to_change_dir = nil;
@@ -33,7 +37,11 @@ swt_markers_MapMouseUp = {
 		if !(isNil "swt_mark_to_change_pos") then {
 			_coords = + swt_markers_position;
 			_mark = swt_mark_to_change_pos;
-			swt_markers_sys_change_mark = ["POS", player, _mark, swt_mark_to_change_pos call swt_markers_getChannel, _coords];
+			if((swt_markers_allMarkers find _mark) == -1) exitWith {
+				swt_mark_to_change_pos = nil;
+				swt_markers_position = nil;
+			};
+			swt_markers_sys_change_mark = ["POS", player, _mark, _mark call swt_markers_getChannel, _coords];
 			if (!isMultiplayer) then {swt_markers_sys_change_mark call swt_markers_logicServer_change_mark};
 			publicVariableServer "swt_markers_sys_change_mark";
 			swt_mark_to_change_pos = nil;
@@ -68,7 +76,7 @@ swt_markers_MapMouseDown = {
     		_index = swt_markers_allMarkers find _marker;
     		if(_index  >= 0) exitWith
     		{
-				if (name player == ((swt_markers_allMarkers_params select _index) select 8)) then {
+				if (player == ((swt_markers_allMarkers_params select _index) select 10)) then {
 					swt_mark_to_change_dir = _marker;
 					swt_markers_direction = markerDir _marker;
 				} else {
@@ -121,7 +129,7 @@ swt_markers_MapMouseDown = {
     		_marker = if(count _marker > 1 && (_marker select 0) == "marker") then {_marker select 1};
     		_index = swt_markers_allMarkers find _marker;
 			if (_index >= 0) exitWith {
-				if (name player == ((swt_markers_allMarkers_params select _index) select 8)) then {
+				if (player == ((swt_markers_allMarkers_params select _index) select 10)) then {
 				swt_mark_to_change_pos = _marker;
 				swt_markers_position = getMarkerPos _marker;
 				} else {
@@ -198,6 +206,7 @@ swt_markers_MapMouseHold = {
 	};
 };
 
+swt_markers_delete_collection = [];
 
 swt_markers_MapKeyDown = {
 	disableSerialization;
@@ -230,14 +239,30 @@ swt_markers_MapKeyDown = {
 	} else {
 	    if (_dikCode == 211) then { //DEL
 			_marker = ctrlMapMouseOver (_display displayCtrl 51);
-	    	_marker = if(count _marker > 1 && (_marker select 0) == "marker") then {_marker select 1};
+			if(count _marker < 2) exitWith{};
+	    	if((_marker select 0) != "marker") exitWith{};
+			_marker = _marker select 1;
 	    	_index = swt_markers_allMarkers find _marker;
-			if (_index >= 0) exitWith {
-				swt_markers_sys_change_mark = ["DEL", player, _marker, _marker call swt_markers_getChannel];
-				if (!isMultiplayer) then {swt_markers_sys_change_mark call swt_markers_logicServer_change_mark};
-				publicVariableServer "swt_markers_sys_change_mark";
-			};
+			if(_index < 0) exitWith {};
+			_markerData = (swt_markers_allMarkers_params select _index);
+			if(([(_display displayCtrl 51) ctrlMapWorldToScreen (_markerData select 3), swt_markers_pos_m] call bis_fnc_distance2D) > 0.025) exitWith {};
+
+			//FrqParser addon
+			if(call swt_markers_MapKeyDown_Addon_FrqParser_delete_condition) exitWith{};
+
+			if(_marker in swt_markers_delete_collection) exitWith{};
+			swt_markers_delete_collection set[count swt_markers_delete_collection, _marker];
+			swt_markers_sys_change_mark = ["DEL", player, _marker, _marker call swt_markers_getChannel];
+			if (!isMultiplayer) then {swt_markers_sys_change_mark call swt_markers_logicServer_change_mark};
+			publicVariableServer "swt_markers_sys_change_mark";
 		};
 		false
+	};
+};
+
+swt_markers_MapKeyUp = {
+	_dikCode = _this select 1;
+	if (_dikCode == 211) then { //DEL
+		swt_markers_delete_collection = [];
 	};
 };

@@ -391,7 +391,7 @@
 				Placed by: %3&lt;br/&gt;%4&lt;br/&gt;Time:&#160;
 				</English>
 				<Russian>
-				Поставил: %3&lt;br/&gt;%4&lt;br/&gt;Время:&#160;
+				Поставил: %2&lt;br/&gt;%3&lt;br/&gt;Время:&#160;
 				</Russian>
 			</Key>
 			<Key ID="STR_SWT_M_INFOLOADED">
@@ -424,14 +424,6 @@
 				</English>
 				<Russian>
 				Отмена
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_M_INFO">
-				<English>
-				Main info
-				</English>
-				<Russian>
-				Информация
 				</Russian>
 			</Key>
 			<Key ID="STR_SWT_M_SET">
@@ -496,83 +488,17 @@
 			<Key ID="STR_SWT_M_ATXT">
 				<English>
 				Author: &lt;font color='#FFFF00'&gt;swatSTEAM&lt;/font&gt;.
-				&lt;br/&gt;Rebuilt for ArmaProject.Ru needs: &lt;font color='#FFFF00'&gt;Noma&lt;/font&gt;, &lt;font color='#FFFF00'&gt;nKlar&lt;/font&gt;.
+				&lt;br/&gt;
+				Refactoring and rework for ArmaProject.ru needs: &lt;font color='#FFFF00'&gt;nKlar&lt;/font&gt;.
+				&lt;br/&gt;
+				Active testing during rebuild: &lt;font color='#FFFF00'&gt;Noma&lt;/font&gt;.
 				</English>
 				<Russian>
 				Автор: &lt;font color='#FFFF00'&gt;swatSTEAM&lt;/font&gt;.
-				&lt;br/&gt;Переработали для ArmaProject.Ru: &lt;font color='#FFFF00'&gt;Noma&lt;/font&gt;, &lt;font color='#FFFF00'&gt;nKlar&lt;/font&gt;.
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_DS_KV">
-				<English>
-				SW freq.
-				</English>
-				<Russian>
-				Частоты КВ
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_DS_DV">
-				<English>
-				LR freq.
-				</English>
-				<Russian>
-				Частоты ДВ
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_DE_FREQ">
-				<English>
-				Frequencies
-				</English>
-				<Russian>
-				Частоты
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_FQ_MAIN">
-				<English>
-				&lt;font size=14 color='#FFFFFF'&gt; Frequency: &lt;/font&gt;&lt;font size=12 color='#FFFF00'&gt;%1&lt;/font&gt;
-				</English>
-				<Russian>
-				&lt;font size=14 color='#FFFFFF'&gt; Частота: &lt;/font&gt;&lt;font size=12 color='#FFFF00'&gt;%1&lt;/font&gt;
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_FQ_N">
-				<English>
-				&lt;font size=13 color='#FFFFFF'&gt;  %1 reserve: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
-				</English>
-				<Russian>
-				&lt;font size=13 color='#FFFFFF'&gt;  %1 резерв: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_FQ_ST">
-				<English>
-				&lt;font size=13 color='#FFFFFF'&gt;  %1 shift: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
-				</English>
-				<Russian>
-				&lt;font size=13 color='#FFFFFF'&gt;  %1 сдвиг: &lt;/font&gt;&lt;font size=11 color='#FFFF00'&gt;%2&lt;/font&gt;
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_MY_GRP">
-				<English>
-				&lt;font color='#556B2F'&gt;%1&lt;/font&gt;
-				</English>
-				<Russian>
-				&lt;font color='#556B2F'&gt;%1&lt;/font&gt;
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_MY_SQD">
-				<English>
-				&lt;font color='#ABB78D'&gt;%1&lt;/font&gt;
-				</English>
-				<Russian>
-				&lt;font color='#ABB78D'&gt;%1&lt;/font&gt;
-				</Russian>
-			</Key>
-			<Key ID="STR_SWT_M_RESYNC">
-				<English>
-				Resynchronization
-				</English>
-				<Russian>
-				Ресинхронизация
+				&lt;br/&gt;
+			Рефакторинг и переработка для ArmaProject.Ru: &lt;font color='#FFFF00'&gt;nKlar&lt;/font&gt;.
+				&lt;br/&gt;
+			Активное тестирование во время переработки: &lt;font color='#FFFF00'&gt;Noma&lt;/font&gt;.
 				</Russian>
 			</Key>
 			<Key ID="STR_SWT_M_KV">
@@ -589,6 +515,174 @@
 				</English>
 				<Russian>
 				ДВ рация
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_AIR">
+				<English>
+				Air
+				</English>
+				<Russian>
+				Воздух
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_ARMOR">
+				<English>
+				Armored vehicle
+				</English>
+				<Russian>
+				Бронетехника
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_HQ">
+				<English>
+				HQ
+				</English>
+				<Russian>
+				Штаб
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_INF">
+				<English>
+				Infantry
+				</English>
+				<Russian>
+				Пехота
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_INSTALLATION">
+				<English>
+				Installation
+				</English>
+				<Russian>
+				Установка
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_MECH_INF">
+				<English>
+				Mech. infantry
+				</English>
+				<Russian>
+				Мех. пехота
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_MED">
+				<English>
+				Medic
+				</English>
+				<Russian>
+				Медик
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_MORTAR">
+				<English>
+				Mortar
+				</English>
+				<Russian>
+				Миномет
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_MOTOR_INF">
+				<English>
+				Moto. infantry
+				</English>
+				<Russian>
+				Мотопехота
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_RECON">
+				<English>
+				Recon
+				</English>
+				<Russian>
+				Разведка
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_O_UNKNOWN">
+				<English>
+				Unknown
+				</English>
+				<Russian>
+				Неизвестное
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_AMBUSH_CA">
+				<English>
+				Ambush
+				</English>
+				<Russian>
+				Засада
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_ARROW_CA">
+				<English>
+				Arrow
+				</English>
+				<Russian>
+				Стрелка
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_DESTROY_CA">
+				<English>
+				Destroy
+				</English>
+				<Russian>
+				Уничтожить
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_DOT_CA">
+				<English>
+				Dot
+				</English>
+				<Russian>
+				Точка
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_END_CA">
+				<English>
+				End
+				</English>
+				<Russian>
+				Конец
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_FLAG_CA">
+				<English>
+				Flag
+				</English>
+				<Russian>
+				Флаг
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_OBJECTIVE_CA">
+				<English>
+				Objective
+				</English>
+				<Russian>
+				Цель
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_PICKUP_CA">
+				<English>
+				Pickup
+				</English>
+				<Russian>
+				Точка подбора
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_UNKNOWN_CA">
+				<English>
+				Unknown
+				</English>
+				<Russian>
+				Неизвестное
+				</Russian>
+			</Key>
+			<Key ID="STR_SWT_M_WARNING_CA">
+				<English>
+				Warning
+				</English>
+				<Russian>
+				Осторожно
 				</Russian>
 			</Key>
 		</Container>

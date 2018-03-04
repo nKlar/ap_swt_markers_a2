@@ -1,4 +1,4 @@
-#define	cbSetChecked(a) ctrlSetText(if(a)then{"\swt_markers\data\CheckBox_checked_ca.paa"}else{"\swt_markers\data\CheckBox_unchecked_ca.paa"})
+#define	cbSetChecked(a) ctrlSetText(if(a)then{"\ap_swt_markers_a2\data\UI\CheckBox_checked_ca.paa"}else{"\ap_swt_markers_a2\data\UI\CheckBox_unchecked_ca.paa"})
 disableSerialization;
 _ctrl = ((_this select 0) select 0);
 _display = ctrlParent _ctrl;

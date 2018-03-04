@@ -7,20 +7,17 @@
 #define	colorPlayerChannel [0.8, 0.7, 1, 1]
 #define GR_W (((safezoneW/safezoneH) min 1.2)/40)
 #define GR_H ((((safezoneW/safezoneH) min 1.2)/1.2)/25)
-#define	cbSetChecked(a) ctrlSetText(if(a)then{"\swt_markers\data\CheckBox_checked_ca.paa"}else{"\swt_markers\data\CheckBox_unchecked_ca.paa"})
+#define	cbSetChecked(a) ctrlSetText(if(a)then{"\ap_swt_markers_a2\data\UI\CheckBox_checked_ca.paa"}else{"\ap_swt_markers_a2\data\UI\CheckBox_unchecked_ca.paa"})
 
-#define swt_markers_scope 0
-#define swt_markers_version 3
+#define swt_markers_version 4
 #define swt_markers_def_color_slot_params ["ColorBlue","ColorRed","ColorGreen","ColorBlack","ColorWhite","ColorOrange"]
-#define swt_markers_def_icon_slot_params ["mil_dot","o_inf","o_armor","hd_pickup","hd_warning","hd_unknown"]
-#define swt_markers_def_settings_params [true,true,true,true,true,false,false,true,true,"",true,true,false]
+#define swt_markers_def_icon_slot_params ["swt_dot_CA","swt_o_inf","swt_o_motor_inf","swt_o_armor","swt_unknown_CA","swt_kv"]
+#define swt_markers_def_settings_params [true,true,true,false,true,false,false,true,true,"",true,true,true]
 
 
-swt_markers_disable = false;
 swt_markers_load_enabled = true;
 swt_markers_load_enabled_for = true;
 swt_markers_load_enabled_when = true;
-swt_markers_bis_markers = false;
 sweetk_s = 1;
 swt_markers_time = 0;
 swt_markers_MapTime = 0;
@@ -37,8 +34,8 @@ swt_markers_delayCoeff = 25;
 
 if (isNil "swt_markers_pos_m") then {swt_markers_pos_m = [0,0]};
 
-call compile preprocessfilelinenumbers '\swt_markers\UI\MapHandlers.sqf';
-call compile preprocessfilelinenumbers '\swt_markers\UI\DisplayHandlers.sqf';
+call compile preprocessfilelinenumbers '\ap_swt_markers_a2\UI\MapHandlers.sqf';
+call compile preprocessfilelinenumbers '\ap_swt_markers_a2\UI\DisplayHandlers.sqf';
 
 swt_markers_available_channels = [localize "str_channel_global",localize "str_channel_side",localize "str_channel_command",localize "str_channel_group",localize "str_channel_vehicle",localize "str_channel_direct"];
 swt_markers_unavailable_channels = getArray (missionconfigfile >> "disableChannels");
@@ -64,7 +61,7 @@ swt_markers_getColorChannel = {
 	_channel;
 };
 
-swt_markers_getColorName = {
+/*swt_markers_getColorName = {
 	_name = _this select 0;
 	_tag = _this select 1;
 	{
@@ -78,7 +75,7 @@ swt_markers_getColorName = {
 		};
 	} forEach (playableUnits+switchableUnits);
 	_name;
-};
+};*/
 
 swt_markers_log = {
 	_addzero = {
@@ -117,7 +114,7 @@ swt_markers_log = {
 				_Chan = [_Chan,"font"] call swt_markers_getColorChannel;
 		    	_Type = _params select 4;
 		    	_Name = _params select 8;
-		    	_colorname = [_Name,"font"] call swt_markers_getColorName;
+		    	_colorname = format[_Name,"font"];
 				_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKCREATED") + _sep,
 				 			_colorname,
 							_mark,
@@ -127,10 +124,10 @@ swt_markers_log = {
 		    };
 		    case "DEL": {
 		    	_Name  = _params select 0;
-		    	_colorname = [_Name,"font"] call swt_markers_getColorName;
+		    	_colorname = format[_Name,"font"];
 		    	_markParams = _params select 1;
 		    	_mark = _markParams select 0;
-		    	_owner = [(_markParams select 8),"font"] call swt_markers_getColorName;
+		    	_owner = format[(_markParams select 8),"font"];
 				_Type = _markParams select 4;
 		    	_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKDELETED") + _sep,
 				 			_colorname,
@@ -141,10 +138,10 @@ swt_markers_log = {
 		    };
 		    case "DIR": {
 		    	_Name  = _params select 0;
-		    	_colorname = [_Name,"font"] call swt_markers_getColorName;
+		    	_colorname = format[_Name,"font"];
 		    	_markParams = _params select 1;
 		    	_mark = _markParams select 0;
-		    	_owner = [(_markParams select 8),"font"] call swt_markers_getColorName;
+		    	_owner = format[(_markParams select 8),"font"];
 				_Type = _markParams select 4;
 		    	_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKDIR") + "<font color='#F88379'><marker name='%3'>%4</marker></font>" + _sep,
 				 			_colorname,
@@ -155,10 +152,10 @@ swt_markers_log = {
 		    };
 			case "POS": {
 		    	_Name  = _params select 0;
-		    	_colorname = [_Name,"font"] call swt_markers_getColorName;
+		    	_colorname = format[_Name,"font"];
 		    	_markParams = _params select 1;
 		    	_mark = _markParams select 0;
-		    	_owner = [(_markParams select 8),"font"] call swt_markers_getColorName;
+		    	_owner = format[(_markParams select 8),"font"];
 				_Type = _markParams select 4;
 		    	_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKPOS") + "<font color='#F88379'><marker name='%3'>%4</marker></font>" + _sep,
 				 			_colorname,
@@ -169,7 +166,7 @@ swt_markers_log = {
 		    };
 		    case "LOAD": {
 		    	_Name  = _params select 0;
-		    	_colorname = [_Name,"font"] call swt_markers_getColorName;
+		    	_colorname = format[_Name,"font"];
 		    	_count = _params select 1;
 		    	_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKLOAD") + _sep, _colorname, _count];
 		    };
@@ -245,11 +242,29 @@ swt_markers_showInfo = {
 		format ["%1:%2:%3 (%4:%5:%6)",_hour call _addzero, _minute call _addzero, _second call _addzero, _hourN call _addzero, _minuteN call _addzero, _secondN call _addzero];
 	};
 
+	_getMarkerName = {
+		switch (_this) do
+		{
+			case -2:
+			{
+				localize "STR_SWT_M_LINE"
+			};
+			case -3:
+			{
+				localize "STR_SWT_M_ELLIPSE"
+			};
+			default
+			{
+				getText ((swt_cfgMarkers select _this) >> "name")
+			};
+		};
+	};
+
 	_ctrl_info = _display displayCtrl 228;
 	_find = false;
-
 	_mark = ctrlMapMouseOver (_display displayCtrl 51);
-    _mark = if(count _mark > 1 && (_marker select 0) == "marker") then {_mark select 1};
+    _mark = if(count _mark > 1 && (_mark select 0) == "marker") then {_mark select 1};
+
 	_pos = getMarkerPos _mark;
 	_pos = (_this select 0) ctrlMapWorldToScreen _pos;
     _index = swt_markers_allMarkers find _mark;
@@ -257,15 +272,24 @@ swt_markers_showInfo = {
 		_find = true;
 		if (swt_markers_hold) then {
 			_markParams = swt_markers_allMarkers_params select _index;
+			_Type = _markParams select 4;
+			_markerName = _Type call _getMarkerName;
 			_name = _markParams select 8;
 			_channel = _markParams select 1;
 			_channel = [_channel,"t"] call swt_markers_getColorChannel;
 			_time = _markParams select 9;
-			_colorname = [_name,"t"] call swt_markers_getColorName;
-			_Type = _markParams select 4;
-			_ctrl_info ctrlSetStructuredText parseText format ["<t size='0.8'>\
-			<t align='center' color='#F88379'>%1 ID: %2" + (if (!isNil {_markParams select 11}) then {localize "STR_SWT_M_INFOLOADED"} else {""}) + "</t><br/>" + (localize "STR_SWT_M_INFOWIN") + (_time call _getFormatedTime) + "</t>",
-			(if (_Type==-2) then {localize "STR_SWT_M_LINE"} else {if (_Type==-3) then {localize "STR_SWT_M_ELLIPSE"} else {localize "STR_SWT_M_MARKER"}}), _mark, _colorname, _channel];
+			_colorname = format[_name,"t"];
+			_ctrl_info ctrlSetStructuredText parseText format [
+			"<t size='0.8'>\
+				<t align='center' color='#F88379'>%1</t>\
+					<br/>" +
+					(localize "STR_SWT_M_INFOWIN") + (_time call _getFormatedTime) +
+				"<br/>\
+			</t>\
+				<t align='right' color='#C0C0C0' size='0.7'>" +
+					_mark + (if (!isNil {_markParams select 11}) then {localize "STR_SWT_M_INFOLOADED"} else {""}) +
+				"</t>",
+			_markerName, _colorname, _channel];
 			_ctrl_pos = ctrlPosition _ctrl_info;
 			if ((markerText _mark) == "") then {
 				_ctrl_info ctrlSetPosition [(_pos select 0) - (0.05)/2 + 0.07, (_pos select 1) - (_ctrl_pos select 3)/2, _ctrl_pos select 2, _ctrl_pos select 3];
@@ -490,10 +514,17 @@ swt_markers_lb_sel_adv = {
 	    };
 
 	    case 15001: {
-			_class = (_this select 0) lbData (_this select 1);
+	    	_ctrl = _this select 0;
+			_class = _ctrl lbData (_this select 1);
 			swt_markers_mark_type = _class;
 			swt_pic = getText (configFile >> "cfgMarkers" >> swt_markers_mark_type >> "icon");
-			((ctrlParent (_this select 0)) displayCtrl 204) ctrlSetText swt_pic;
+			_swt_text = getText (configFile >> "cfgMarkers" >> swt_markers_mark_type >> "name");
+			((ctrlParent _ctrl) displayCtrl 204) ctrlSetText swt_pic;
+			_ctrl ctrlSetTooltip _swt_text;
+			_ctrl ctrlRemoveAllEventHandlers 'MouseMoving';
+			_ctrl ctrlRemoveAllEventHandlers 'MouseZChanged';
+			_ctrl ctrlAddEventHandler ["MouseMoving", "(_this select 0) ctrlSetTooltip ''; (_this select 0) ctrlRemoveAllEventHandlers 'MouseMoving'; (_this select 0) ctrlRemoveAllEventHandlers 'MouseZChanged';"];
+			_ctrl ctrlAddEventHandler ["MouseZChanged", "(_this select 0) ctrlSetTooltip ''; (_this select 0) ctrlRemoveAllEventHandlers 'MouseMoving'; (_this select 0) ctrlRemoveAllEventHandlers 'MouseZChanged';"];
 	    };
 	};
 };
@@ -536,18 +567,20 @@ swt_markers_profileNil = {
 	_cfg = (configfile >> "CfgMarkerColors");
 	for "_i" from 0 to (count _cfg) - 1 do
 	{
-		if (getNumber (_cfg select _i >> 'scope') > swt_markers_scope) then
+		if (getNumber (_cfg select _i >> 'scope') > 1) then
 		{
 			swt_cfgMarkerColors set [count swt_cfgMarkerColors, _cfg select _i];
 		};
 	};
+	swt_cfgMarkerColors = swt_cfgMarkerColors - [(_cfg >> "Default")];
 	swt_cfgMarkers = [];
 	_cfg = (configfile >> "CfgMarkers");
 	for "_i" from 0 to (count _cfg) - 1 do
 	{
-		if (getNumber (_cfg select _i >> 'scope') > swt_markers_scope) then
+		_marker = _cfg select _i;
+		if (getNumber (_marker >> 'swt_show') > 0) then
 		{
-			swt_cfgMarkers set [count swt_cfgMarkers, _cfg select _i];
+			swt_cfgMarkers set [count swt_cfgMarkers, _marker];
 		};
 	};
 
@@ -755,7 +788,7 @@ swt_get_mark_param = {
 	[_mark,[_markerType,_markerColor,_markerPos,_markerText,_markerDir,_markerSize,_markerAlpha]];
 };
 
-swt_markers_cb_butt = compile preprocessFileLineNumbers '\swt_markers\UI\checkBoxesSett.sqf';
+swt_markers_cb_butt = compile preprocessFileLineNumbers '\ap_swt_markers_a2\UI\checkBoxesSett.sqf';
 
 
 swt_str_Replace = {
@@ -805,9 +838,18 @@ swt_markers_fnc_load_markers = {
 		_arr =  (if (isNil {_this select 1}) then {[] + (profileNamespace getVariable "ap_swt_markers_save_arr")} else {call compile ("[]+" + ([(_this select 1),";",""] call swt_str_Replace) + "+[]")});
 		if !(count _arr == 0) then {
 			if (count _arr > 500) exitWith {systemChat (format [localize "STR_SWT_M_MESS_CANTLOAD", count _arr, 500]);};
+			_coloredName = name player;
+			_tag = "%1";
+			_coloredName = switch (side player) do {
+				case west: {format ["<%2 color='#6495ED'>%1</%2>", _coloredName, _tag]};
+				case east: {format ["<%2 color='#E34234'>%1</%2>", _coloredName, _tag]};
+				case resistance: {format ["<%2 color='#50C878'>%1</%2>", _coloredName, _tag]};
+				case civilian: {format ["<%2 color='#FFED00'>%1</%2>", _coloredName, _tag]};
+			};
+
 			_copy_arr = [];
 			{
-				_copy_arr set [count _copy_arr, (["",""] + _x)];
+				_copy_arr set [count _copy_arr, (["",""] + _x + [_coloredName])];
 			} forEach _arr;
 
 			swt_markers_sys_load = [player, _copy_arr];

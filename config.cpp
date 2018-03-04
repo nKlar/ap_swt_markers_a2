@@ -1,6 +1,8 @@
+//#define AntiTuMarkers
+
 class CfgPatches
 {
-	class ap_markers
+	class ap_swt_markers_a2
 	{
 		units[]={};
 		weapons[]={};
@@ -8,12 +10,14 @@ class CfgPatches
 		requiredAddons[]=
 		{
 			"Extended_EventHandlers",
+			#ifdef AntiTuMarkers
+			"tu_markers",
+			#endif
 			"CAUI"
 		};
 		author[]=
 		{
 			"swatSTEAM",
-			"Noma",
 			"nKlar"
 		};
 		versionDesc="SWT Markers, rebuilt by ArmaProject";
@@ -24,28 +28,26 @@ class CfgPatches
 };
 class Extended_PreInit_EventHandlers
 {
-	class swt_markers
+	class ap_swt_markers_a2
 	{
-		Init="execVM '\swt_markers\fn_init.sqf'";
+		Init="execVM '\ap_swt_markers_a2\fn_init.sqf'";
 	};
+
+	#ifdef AntiTuMarkers
+	delete c_persistent_markers;
+	#endif
+
 };
-class CfgMarkers
+
+#ifdef AntiTuMarkers
+class Extended_PostInit_EventHandlers //Anti tu_markers
 {
-	class swt_kv
-	{
-		scope=2;
-		name="$STR_SWT_M_KV";
-		icon="\swt_markers\data\marker_kv_ca.paa";
-		color[]={1,0,0,1};
-		size=29;
-		shadow=1;
-	};
-	class swt_dv: swt_kv
-	{
-		name="$STR_SWT_M_DV";
-		icon="\swt_markers\data\marker_dv_ca.paa";
-	};
+	delete c_persistent_markers;
 };
+#endif
+
+#include "data\Markers\markers.cpp"
+
 class RscListBox;
 class RscIGUIListBox;
 class RscXListBox;
@@ -316,8 +318,8 @@ class swt_RscCombo: RscCombo
 	colorBackground[]={0,0,0,0.69999999};
 	colorSelectBackground[]={1,1,1,0.69999999};
 	colorScrollbar[]={1,0,0,1};
-	arrowEmpty="\swt_markers\data\arrow_combo_ca.paa";
-	arrowFull="\swt_markers\data\arrow_combo_active_ca.paa";
+	arrowEmpty="\ap_swt_markers_a2\data\UI\arrow_combo_ca.paa";
+	arrowFull="\ap_swt_markers_a2\data\UI\arrow_combo_active_ca.paa";
 	wholeHeight=0.44999999;
 	colorActive[]={1,0,0,1};
 	colorDisabled[]={1,1,1,0.25};
@@ -364,6 +366,10 @@ class swt_RscButton
 };
 class RscDisplayMainMap
 {
+	#ifdef AntiTuMarkers
+	onKeyUp = ""; //Anti tu_markers
+	#endif
+
 	class controls
 	{
 		class swt_markers_infoCtrl: swt_RscStructuredText
@@ -524,7 +530,7 @@ class RscDisplayInsertMarker
 		class Settings_butt: swt_RscActivePicture
 		{
 			idc=900;
-			text="\swt_markers\data\icon_config_ca.paa";
+			text="\ap_swt_markers_a2\data\UI\icon_config_ca.paa";
 			x=0;
 			y=0;
 			w="0.75 *  ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
@@ -534,7 +540,7 @@ class RscDisplayInsertMarker
 		class show_lb_butt: swt_RscActivePicture
 		{
 			idc=904;
-			text="\swt_markers\data\icon_menu.paa";
+			text="\ap_swt_markers_a2\data\UI\icon_menu.paa";
 			x=0;
 			y=0;
 			w="0.75 *  ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
@@ -1162,15 +1168,11 @@ class RscDisplayInsertMarker
 					color[]={0,0,0,1};
 					OnButtonClick="call swt_def; (ctrlParent (_this select 0)) closeDisplay 0;";
 				};
-				class swt_ButtonResync: swt_ButtonSAVE
-				{
-					idc = 349;
-					text = "$STR_SWT_M_RESYNC";
-					y = "(10 + 11*0.15) * ((((safezoneW/safezoneH) min 1.2)/1.2)/25)";
-					colorBackground[]={0.95700002,0,0,0.80000001};
-					color[] = {0,0,0,1};
-					OnButtonClick = "call swt_markers_resync_markers";
-				};
+				//MarkerResync addon
+				#include "Addons\MarkerResync\control.cpp"
+
+				//BugReport addon
+				#include "Addons\BugReport\control.cpp"
 			};
 		};
 	};

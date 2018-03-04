@@ -16,7 +16,7 @@ swt_markers_createMarker = {
 	_Color = _params select 5;
 	_Dir   = _params select 6;
 	_Scale = _params select 7;
-	_Name  = _params select 8;
+	//_Name  = _params select 8;
 	_Sender = _params select 10;
 
 	swt_markers_allMarkers set [count swt_markers_allMarkers,_mark];
@@ -54,31 +54,12 @@ swt_markers_createMarker = {
 				};
 			};
 
-			switch (_typeName) do
-			{
-				case "swt_dv":
-				{
-					if !(player diarySubjectExists "SWT_DV") then
-					{
-						player createDiarySubject ["SWT_DV", localize "STR_SWT_DS_DV"];
-					};
-					player createDiaryRecord ["SWT_DV", [localize "STR_SWT_DE_FREQ", ([_Text, 1, 25, _Sender] call swt_markers_parse_frequency)]];
-				};
+			//FrqParser addon
+			call swt_markers_createMarker_Addon_FrqParser_main;
 
-				case "swt_kv":
-				{
-					if !(player diarySubjectExists "SWT_KV") then
-					{
-						player createDiarySubject ["SWT_KV", localize "STR_SWT_DS_KV"];
-					};
-					player createDiaryRecord ["SWT_KV", [localize "STR_SWT_DE_FREQ", ([_Text, 30, 512, _Sender] call swt_markers_parse_frequency)]];
-				};
-			};
 		};
 	};
 };
-
-swt_markers_sys_sendMark = compile preprocessFileLineNumbers '\swt_markers\Logic\sendMark.sqf';
 
 swt_markers_logicClient_create = {
 	[_this, true] call swt_markers_createMarker;
@@ -139,159 +120,6 @@ swt_markers_logicClient_load = {
 	["LOAD", [name _player, count (_this select 1)]] call swt_markers_log;
 };
 
-swt_markers_parse_frequency = {
-	private["_text", "_array", "_min", "_max", "_title", "_frequencies", "_shifts", "_arrayDouble", "_i", "_titleReady", "_prefix", "_Sender", "_swt_markers_parse_squad"];
-	_text = _this select 0;
-	_array = toArray _text;
-	_array = _array - [60,62];
-	_min = _this select 1;
-	_max = _this select 2;
-	_Sender = _this select 3;
-
-	_title = [];
-	_frequencies = [];
-	_shifts = [];
-	_arrayDouble = [];
-	_i = 0;
-	_titleReady = false;
-	_prefix = -1;
-
-	_swt_markers_parse_squad = {
-		_name = name (_this select 0);
-		_array = toArray(_name);
-		_srch = _array find 93;
-		if(_srch != -1) then
-		{
-			_array resize (_srch);
-			_array = _array - [91];
-		};
-
-		(toString _array);
-	};
-
-	while{(_i < (count _array))} do
-	{
-		_char = (_array select _i);
-		if(_char >= 48 && _char <= 57) then
-		{
-			while {(_char >= 48 && _char <= 57) || (_char in [44,46])} do
-			{
-				if(_char == 44) then {_char = _char + 2;};
-				_arrayDouble set [count _arrayDouble, _char];
-				_i = _i + 1;
-				_char = (_array select _i);
-			};
-			_stringDouble = toString _arrayDouble;
-			_double = parseNumber _stringDouble;
-			if(_prefix != -1) then
-			{
-				_prefix = toString [_prefix];
-				_shifts set[count _shifts, format["%1%2",_prefix,_double]];
-				_prefix = -1;
-			}
-			else
-			{
-				if(_double >= _min && _double <= _max) then
-				{
-					_frequencies set[count _frequencies, _double];
-					_titleReady = true;
-				};
-			};
-
-			if(!_titleReady) then
-			{
-				_title = _title + _arrayDouble;
-			};
-			_arrayDouble = [];
-		}
-		else
-		{
-			switch (true) do
-			{
-				case (_char in [43,45]):
-				{
-					_prefix = _char;
-				};
-
-				case (_char != 32):
-				{
-					_prefix = -1;
-				};
-			};
-			if(!_titleReady) then
-			{
-				_title set [count _title, _char];
-			};
-			_i = _i + 1;
-		}
-	};
-
-	_parsed = (toString _array);
-	switch (true) do
-	{
-		case ((group _Sender) == (group player)):
-		{
-			_parsed = format[localize "STR_SWT_MY_GRP", _parsed];
-		};
-
-		case (([_Sender] call _swt_markers_parse_squad) == ([player] call _swt_markers_parse_squad)):
-		{
-			_parsed = format[localize "STR_SWT_MY_SQD", _parsed];
-		};
-	};
-
-	_parsed = _parsed + '<br/>';
-
-	if((count _frequencies) > 0) then
-	{
-		_parsed = _parsed + format[(localize "STR_SWT_FQ_MAIN"), _frequencies select 0] + '<br/>';
-		for [{_i=1},{_i<(count _frequencies)},{_i=_i+1}] do
-		{
-			_parsed = _parsed + format[(localize "STR_SWT_FQ_N"), _i, _frequencies select _i] + '<br/>';
-		};
-	};
-	if((count _shifts) > 0) then
-	{
-		for [{_i=0},{_i<(count _shifts)},{_i=_i+1}] do
-		{
-			_parsed = _parsed + format[(localize "STR_SWT_FQ_ST"), _i+1, _shifts select _i] + '<br/>';
-		};
-	};
-	_parsed;
-};
-
-canSync = true;
-
-swt_markers_resync_markers = {
-	if (canSync) then
-	{
-		canSync = false;
-		{
-			deleteMarkerLocal _x;
-		} forEach swt_markers_allMarkers;
-		swt_markers_allMarkers = [];
-		swt_markers_allMarkers_params = [];
-		swt_markers_sys_req_markers = player;
-		publicVariableServer "swt_markers_sys_req_markers";
-		[] spawn
-		{
-			disableSerialization;
-			_timer = 60;
-			while {_timer > 0} do
-			{
-				_ctrl = ((findDisplay 54) displayCtrl 349);
-				_ctrl ctrlSetText ((localize "STR_SWT_M_RESYNC") + " (" + str _timer + ")");
-				_ctrl ctrlSetBackgroundColor [0.259,0.286,0.286,1];
-				_timer = _timer - 1;
-				uiSleep 1;
-			};
-			_ctrl = ((findDisplay 54) displayCtrl 349);
-			_ctrl ctrlSetText (localize "STR_SWT_M_RESYNC");
-			_ctrl ctrlSetBackgroundColor [0.95700002,0,0,0.80000001];
-			canSync = true;
-		};
-	};
-};
 
 [] spawn {
 	"swt_markers_send_mark"  addPublicVariableEventHandler {

@@ -134,7 +134,9 @@ _coef_h_icon = (_h_icon/_w_icon);
 	_control ctrlSetPosition [((_pos_control_base select 0) + (((_pos_control_base select 2)/6) * _forEachIndex)), (_pos_control_base select 1) - (_pos select 3) - 0.2*(_pos_control_base select 3) - (_coef_h_icon * ((_pos_control_base select 2)/6)), ((_pos_control_base select 2)/6), (_coef_h_icon * ((_pos_control_base select 2)/6))];
 	_control ctrlCommit 0;
 	_pic = getText (configFile >> "cfgMarkers" >> (swt_marker_icon_slot_params select _forEachIndex) >> "icon");
+	_name = getText (configFile >> "cfgMarkers" >> (swt_marker_icon_slot_params select _forEachIndex) >> "name");
 	_control ctrlSetText _pic;
+	_control ctrlSetTooltip _name;
 	if !(swt_markers_show_icon) then {_control ctrlShow false};
 } forEach _controls_icon;
 

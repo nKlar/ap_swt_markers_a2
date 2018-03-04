@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project name="SWT_Markers">
+	<Package name="SWT_Names">
+		<Container name="STR_SWT_M">
+			<Key ID="STR_SWT_M_RESYNC">
+				<English>
+				Resynchronization
+				</English>
+				<Russian>
+				Ресинхронизация
+				</Russian>
+			</Key>
+		</Container>
+	</Package>
+</Project>

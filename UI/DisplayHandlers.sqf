@@ -1,5 +1,5 @@
-swt_markers_onLoad = compile preprocessFileLineNumbers '\swt_markers\UI\onLoad.sqf';
-swt_markers_infoAnim = compile preprocessfilelinenumbers '\swt_markers\UI\RscDisplayInsertMarker.sqf';
+swt_markers_onLoad = compile preprocessFileLineNumbers '\ap_swt_markers_a2\UI\onLoad.sqf';
+swt_markers_infoAnim = compile preprocessfilelinenumbers '\ap_swt_markers_a2\UI\RscDisplayInsertMarker.sqf';
 
 
 swt_markers_unLoad = {
