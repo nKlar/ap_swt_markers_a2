@@ -121,4 +121,7 @@ class CfgMarkers
 		name="$STR_SWT_M_WARNING_CA";
 		icon="\ap_swt_markers_a2\data\Markers\Military\warning_CA.paa";
 	};
+
+	//TuMarkers addon
+	#include "..\..\Addons\TuMarkers\tuClasses.cpp"
 };

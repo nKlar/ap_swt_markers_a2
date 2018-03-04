@@ -24,8 +24,8 @@ swt_markers_logicServer_process_report = {
 
 	diag_log "SWT_MARKERS_REPORT: ====================REPORT START====================";
 
-	diag_log format ["SWT_MARKERS_REPORT (name): %1", _this select 0];
-	diag_log format ["SWT_MARKERS_REPORT (mission): %1", _this select 1];
+	diag_log format ["SWT_MARKERS_REPORT: (name): %1", _this select 0];
+	diag_log format ["SWT_MARKERS_REPORT: (mission): %1", _this select 1];
 
 	_swt_markers_allMarkers = _this select 2;
 	_swt_markers_allMarkers_params = _this select 3;
@@ -35,8 +35,8 @@ swt_markers_logicServer_process_report = {
 
 
 
-	diag_log format ["SWT_MARKERS_REPORT (_swt_markers_allMarkers_count): %1", _swt_markers_allMarkers_count];
-	diag_log format ["SWT_MARKERS_REPORT (_swt_markers_allMarkers_params_count): %1", _swt_markers_allMarkers_params_count];
+	diag_log format ["SWT_MARKERS_REPORT: (_swt_markers_allMarkers_count): %1", _swt_markers_allMarkers_count];
+	diag_log format ["SWT_MARKERS_REPORT: (_swt_markers_allMarkers_params_count): %1", _swt_markers_allMarkers_params_count];
 
 	_index = 0;
 	_maxIndex = [_swt_markers_allMarkers_count,_swt_markers_allMarkers_params_count] select (_swt_markers_allMarkers_params_count >= _swt_markers_allMarkers_count);
@@ -50,7 +50,7 @@ swt_markers_logicServer_process_report = {
 	while {_index < _maxIndex} do
 	{
 		if(_index < _swt_markers_allMarkers_count) then {
-			diag_log format ["SWT_MARKERS_REPORT (marker): %1", _swt_markers_allMarkers select _index];
+			diag_log format ["SWT_MARKERS_REPORT: (marker): %1", _swt_markers_allMarkers select _index];
 		}
 		else
 		{
@@ -74,7 +74,7 @@ swt_markers_logicServer_process_report = {
 					};
 				};
 			};
-			diag_log format ["SWT_MARKERS_REPORT (marker_params): %1", _swt_markers_allMarkers_params select _index];
+			diag_log format ["SWT_MARKERS_REPORT: (marker_params): %1", _swt_markers_allMarkers_params select _index];
 		}
 		else
 		{

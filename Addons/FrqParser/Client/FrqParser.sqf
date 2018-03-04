@@ -217,3 +217,17 @@ swt_markers_createMarker_Addon_FrqParser_main = {
 		};
 	};
 };
+
+swt_markers_MapKeyDown_Addon_FrqParser_delete_condition =
+{
+	_return = false;
+	if((_markerData select 4) >= 0) then
+	{
+		_type = swt_cfgMarkers_names select (_markerData select 4);
+		if(_type in ["swt_kv","swt_dv"] && player != (_markerData select 10)) exitWith {
+			systemChat (localize "STR_SWT_M_MESS_CANTDELFRQ");
+			_return = true;
+		};
+	};
+	_return;
+};

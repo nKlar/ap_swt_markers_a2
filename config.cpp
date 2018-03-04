@@ -1,4 +1,4 @@
-#define AntiTuMarkers
+//#define AntiTuMarkers
 
 class CfgPatches
 {

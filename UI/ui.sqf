@@ -61,7 +61,7 @@ swt_markers_getColorChannel = {
 	_channel;
 };
 
-swt_markers_getColorName = {
+/*swt_markers_getColorName = {
 	_name = _this select 0;
 	_tag = _this select 1;
 	{
@@ -75,7 +75,7 @@ swt_markers_getColorName = {
 		};
 	} forEach (playableUnits+switchableUnits);
 	_name;
-};
+};*/
 
 swt_markers_log = {
 	_addzero = {
@@ -114,7 +114,7 @@ swt_markers_log = {
 				_Chan = [_Chan,"font"] call swt_markers_getColorChannel;
 		    	_Type = _params select 4;
 		    	_Name = _params select 8;
-		    	_colorname = [_Name,"font"] call swt_markers_getColorName;
+		    	_colorname = format[_Name,"font"];
 				_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKCREATED") + _sep,
 				 			_colorname,
 							_mark,
@@ -124,10 +124,10 @@ swt_markers_log = {
 		    };
 		    case "DEL": {
 		    	_Name  = _params select 0;
-		    	_colorname = [_Name,"font"] call swt_markers_getColorName;
+		    	_colorname = format[_Name,"font"];
 		    	_markParams = _params select 1;
 		    	_mark = _markParams select 0;
-		    	_owner = [(_markParams select 8),"font"] call swt_markers_getColorName;
+		    	_owner = format[(_markParams select 8),"font"];
 				_Type = _markParams select 4;
 		    	_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKDELETED") + _sep,
 				 			_colorname,
@@ -138,10 +138,10 @@ swt_markers_log = {
 		    };
 		    case "DIR": {
 		    	_Name  = _params select 0;
-		    	_colorname = [_Name,"font"] call swt_markers_getColorName;
+		    	_colorname = format[_Name,"font"];
 		    	_markParams = _params select 1;
 		    	_mark = _markParams select 0;
-		    	_owner = [(_markParams select 8),"font"] call swt_markers_getColorName;
+		    	_owner = format[(_markParams select 8),"font"];
 				_Type = _markParams select 4;
 		    	_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKDIR") + "<font color='#F88379'><marker name='%3'>%4</marker></font>" + _sep,
 				 			_colorname,
@@ -152,10 +152,10 @@ swt_markers_log = {
 		    };
 			case "POS": {
 		    	_Name  = _params select 0;
-		    	_colorname = [_Name,"font"] call swt_markers_getColorName;
+		    	_colorname = format[_Name,"font"];
 		    	_markParams = _params select 1;
 		    	_mark = _markParams select 0;
-		    	_owner = [(_markParams select 8),"font"] call swt_markers_getColorName;
+		    	_owner = format[(_markParams select 8),"font"];
 				_Type = _markParams select 4;
 		    	_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKPOS") + "<font color='#F88379'><marker name='%3'>%4</marker></font>" + _sep,
 				 			_colorname,
@@ -166,7 +166,7 @@ swt_markers_log = {
 		    };
 		    case "LOAD": {
 		    	_Name  = _params select 0;
-		    	_colorname = [_Name,"font"] call swt_markers_getColorName;
+		    	_colorname = format[_Name,"font"];
 		    	_count = _params select 1;
 		    	_text = format [(time call _getFormatedTime) + (localize "STR_SWT_M_MARKLOAD") + _sep, _colorname, _count];
 		    };
@@ -278,7 +278,7 @@ swt_markers_showInfo = {
 			_channel = _markParams select 1;
 			_channel = [_channel,"t"] call swt_markers_getColorChannel;
 			_time = _markParams select 9;
-			_colorname = [_name,"t"] call swt_markers_getColorName;
+			_colorname = format[_name,"t"];
 			_ctrl_info ctrlSetStructuredText parseText format [
 			"<t size='0.8'>\
 				<t align='center' color='#F88379'>%1</t>\
@@ -838,9 +838,18 @@ swt_markers_fnc_load_markers = {
 		_arr =  (if (isNil {_this select 1}) then {[] + (profileNamespace getVariable "ap_swt_markers_save_arr")} else {call compile ("[]+" + ([(_this select 1),";",""] call swt_str_Replace) + "+[]")});
 		if !(count _arr == 0) then {
 			if (count _arr > 500) exitWith {systemChat (format [localize "STR_SWT_M_MESS_CANTLOAD", count _arr, 500]);};
+			_coloredName = name player;
+			_tag = "%1";
+			_coloredName = switch (side player) do {
+				case west: {format ["<%2 color='#6495ED'>%1</%2>", _coloredName, _tag]};
+				case east: {format ["<%2 color='#E34234'>%1</%2>", _coloredName, _tag]};
+				case resistance: {format ["<%2 color='#50C878'>%1</%2>", _coloredName, _tag]};
+				case civilian: {format ["<%2 color='#FFED00'>%1</%2>", _coloredName, _tag]};
+			};
+
 			_copy_arr = [];
 			{
-				_copy_arr set [count _copy_arr, (["",""] + _x)];
+				_copy_arr set [count _copy_arr, (["",""] + _x + [_coloredName])];
 			} forEach _arr;
 
 			swt_markers_sys_load = [player, _copy_arr];

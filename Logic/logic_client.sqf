@@ -16,7 +16,7 @@ swt_markers_createMarker = {
 	_Color = _params select 5;
 	_Dir   = _params select 6;
 	_Scale = _params select 7;
-	_Name  = _params select 8;
+	//_Name  = _params select 8;
 	_Sender = _params select 10;
 
 	swt_markers_allMarkers set [count swt_markers_allMarkers,_mark];

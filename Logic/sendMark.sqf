@@ -53,6 +53,14 @@ swt_markers_sys_sendMark = {
 	    };
 	};
 
+	_coloredName = name player;
+	_tag = "%1";
+	_coloredName = switch (side player) do {
+		case west: {format ["<%2 color='#6495ED'>%1</%2>", _coloredName, _tag]};
+		case east: {format ["<%2 color='#E34234'>%1</%2>", _coloredName, _tag]};
+		case resistance: {format ["<%2 color='#50C878'>%1</%2>", _coloredName, _tag]};
+		case civilian: {format ["<%2 color='#FFED00'>%1</%2>", _coloredName, _tag]};
+	};
 
 	if (!_go) exitWith {};
 
@@ -66,22 +74,22 @@ swt_markers_sys_sendMark = {
 			//FrqMacro addon
 			call swt_markers_sys_sendMark_Addon_FrqMacro_main;
 
-			_send set [1,[_swtid,_channel,_text, _WorldCoord, swt_cfgMarkers_names find swt_markers_mark_type, swt_cfgMarkerColors_names find swt_markers_mark_color, swt_markers_mark_dir, sweetk_s, name player]];
+			_send set [1,[_swtid,_channel,_text, _WorldCoord, swt_cfgMarkers_names find swt_markers_mark_type, swt_cfgMarkerColors_names find swt_markers_mark_color, swt_markers_mark_dir, sweetk_s, _coloredName]];
 			if (!(swt_markers_ctrlState)) then {(_displayMark closeDisplay 0)};
 	    };
 		case "fast": {
 			_WorldCoord = (_displayMap displayCtrl 51) ctrlMapScreenToWorld swt_markers_pos_m;
 			if (swt_markers_save_text) then {_text = _text + swt_markers_text};
-			_send set [1,[_swtid,_channel,_text,_WorldCoord,swt_cfgMarkers_names find swt_markers_mark_type,swt_cfgMarkerColors_names find swt_markers_mark_color,swt_markers_mark_dir,sweetk_s, name player]];
+			_send set [1,[_swtid,_channel,_text,_WorldCoord,swt_cfgMarkers_names find swt_markers_mark_type,swt_cfgMarkerColors_names find swt_markers_mark_color,swt_markers_mark_dir,sweetk_s, _coloredName]];
 		};
 		case "line": {
-		    _send set [1,[_swtid,_channel,"",[(((_params select 0) select 0) + ((_params select 1) select 0))/2,(((_params select 0) select 1) + ((_params select 1) select 1))/2],-2,swt_cfgMarkerColors_names find swt_markers_mark_color,_params select 2,[_params select 3,_params select 4], name player]];
+		    _send set [1,[_swtid,_channel,"",[(((_params select 0) select 0) + ((_params select 1) select 0))/2,(((_params select 0) select 1) + ((_params select 1) select 1))/2],-2,swt_cfgMarkerColors_names find swt_markers_mark_color,_params select 2,[_params select 3,_params select 4], _coloredName]];
 		};
 		case "ellipse": {
-			_send set [1,[_swtid,_channel,"",[(_params select 0) select 0,(_params select 0) select 1],-3,swt_cfgMarkerColors_names find swt_markers_mark_color,0,[abs(((_params select 1) select 0) - ((_params select 0) select 0)),abs(((_params select 1) select 1) - ((_params select 0) select 1))], name player]];
+			_send set [1,[_swtid,_channel,"",[(_params select 0) select 0,(_params select 0) select 1],-3,swt_cfgMarkerColors_names find swt_markers_mark_color,0,[abs(((_params select 1) select 0) - ((_params select 0) select 0)),abs(((_params select 1) select 1) - ((_params select 0) select 1))], _coloredName]];
 		};
 		case "road": {
-			_send set [1,[_swtid,_channel,"",[_params select 0, _params select 1],swt_cfgMarkers_names find swt_markers_mark_type,swt_cfgMarkerColors_names find swt_markers_mark_color,swt_markers_mark_dir,sweetk_s, name player]];
+			_send set [1,[_swtid,_channel,"",[_params select 0, _params select 1],swt_cfgMarkers_names find swt_markers_mark_type,swt_cfgMarkerColors_names find swt_markers_mark_color,swt_markers_mark_dir,sweetk_s, _coloredName]];
 		};
 	};
 

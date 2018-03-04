@@ -66,6 +66,14 @@
 				&lt;font color='#ABB78D'&gt;%1&lt;/font&gt;
 				</Russian>
 			</Key>
+			<Key ID="STR_SWT_M_MESS_CANTDELFRQ">
+				<English>
+				You can delete only your frequency markers
+				</English>
+				<Russian>
+				Вы можете удалять только ваши частотные маркера
+				</Russian>
+			</Key>
 		</Container>
 	</Package>
 </Project>

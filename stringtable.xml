@@ -410,14 +410,6 @@
 				Вы можете изменять только ваши маркеры
 				</Russian>
 			</Key>
-			<Key ID="STR_SWT_M_MESS_CANTDELFRQ">
-				<English>
-				You can delete only your frequency markers
-				</English>
-				<Russian>
-				Вы можете удалять только ваши частотные маркеры
-				</Russian>
-			</Key>
 			<Key ID="STR_SWT_M_THICKNESS">
 				<English>
 				Thickness: %1
